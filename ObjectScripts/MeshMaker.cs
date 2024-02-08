@@ -29,10 +29,10 @@ public class MeshMaker : MonoBehaviour
         Config.debugModeEnabled = debugModeEnabled;
         numSides *= 2;
         // MakeCylinderMesh();
-        MakePolygonMesh();
+        MakeBoxedPolygonMesh();
     }
 
-    public void MakePolygonMesh()
+    public void MakeBoxedPolygonMesh()
     {
         Polygon p = new Polygon(numSides);
         var meshData = p.GetMeshData();
@@ -41,38 +41,7 @@ public class MeshMaker : MonoBehaviour
         var texture = GetTexture();
         drawer.DrawMesh(meshData, texture);
     }
-    // public void MakeClippedMesh()
-    // {
-    //     var triangleVertices = ClipperDemo.GetVerticesForTriangle(100);
-    //     var polyVertices = ClipperDemo.GetVerticesForPolygon(6);
 
-    //     var rslt = PolygonClipper.ClipPolygon(triangleVertices, polyVertices);
-    //     var clippedVerts = rslt.Item1;
-    //     var clippedTriangles = rslt.Item2;
-
-    //     Debug.Log($"VERTEX COUNT {clippedVerts.Count}");
-    //     Debug.Log($"TRIANGLE COUNT {clippedTriangles.Count}");
-    //     for (int i = 0; i < clippedVerts.Count; i++)
-    //     {
-    //         Debug.Log($"{clippedVerts[i].x}, {clippedVerts[i].y}");
-    //     }
-    //     for (int i = 0; i < clippedTriangles.Count / 3; i++)
-    //     {
-    //         Debug.Log($"{clippedTriangles[i]}, {clippedTriangles[i + 1]}, {clippedTriangles[i + 2]}");
-    //     }
-
-    //     List<Vector3> clippedVerts3D = clippedVerts.ConvertAll(v => new Vector3(v.x, v.y, 0));
-
-    //     Mesh mesh = new Mesh
-    //     {
-    //         vertices = clippedVerts.ConvertAll(v => new Vector3(v.x, v.y, 0)).ToArray(),
-    //         triangles = clippedTriangles.ToArray(),
-    //     };
-    //     mesh.RecalculateNormals();
-    //     MeshDrawer drawer = FindObjectOfType<MeshDrawer>();
-    //     var texture = GetTexture();
-    //     drawer.DrawRawMesh(mesh, texture);
-    // }
     public void MakeCylinderMesh()
     {
         // TODO: the length used to calculate the uvs of the cylinder and the splay should both be length+totChangeInU since they share the same material/texture
