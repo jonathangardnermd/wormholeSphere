@@ -15,15 +15,4 @@ public class MeshDrawer : MonoBehaviour
 
         if (Config.debugModeEnabled) Debug.Log("Done Drawing Mesh");
     }
-
-    public void DrawRawMesh(Mesh mesh, Texture2D texture)
-    {
-        if (Config.debugModeEnabled) Debug.Log("Creating mesh...");
-        meshFilter.sharedMesh = mesh;
-
-        if (Config.debugModeEnabled) Debug.Log("Setting texture...");
-        meshRenderer.sharedMaterial.mainTexture = texture;
-
-        if (Config.debugModeEnabled) Debug.Log("Done Drawing Mesh");
-    }
 }

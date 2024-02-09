@@ -8,112 +8,46 @@ public class MeshMaker : MonoBehaviour
     public bool autoUpdate = false;
     public bool addWormhole = true;
 
-    [Range(2, 100)]
+    [Range(2, 10)]
     public int numSides = 50; // the numSides in the polygon (e.g. 6 means the cross-section is hexagonal)
 
-    [Min(0.01f)]
-    public float length = 20; // the length of the polygonal cylinder
-
-    [Min(0.01f)]
-    public float polygonVertexRadius = 1; // the radius of the polygonal cylinder
-
-    [Range(0, 40)]
-    public int numSplaySubdivisions = 20; // this controls how well the splay approximates a parabolic curve
-
-    [Min(1f)]
-    public float totChangeInU = 10; // the size of the splay in the wormhole
-
+    // [Min(0.01f)]
+    // public float length = 20; // the length of the polygonal cylinder
 
     public void MakeMesh()
     {
         Config.debugModeEnabled = debugModeEnabled;
-        numSides *= 2;
-        // MakeCylinderMesh();
-        // MakeBoxedPolygonMesh();
-        // MakeEquilateralTriangleMesh();
-        // MakeTriangleWithRectangleHole();
-        MakeTriangleWithPolygonHole();
+        // MakeTriangleWithPolygonHole();
+        MakeIco();
     }
 
     public void MakeTriangleWithPolygonHole()
     {
-        Polygon p = new Polygon(numSides);
+        float polySize = 1f;
+        Polygon p = new Polygon(numSides * 2);
         var meshData = new MeshData();
-        var b = PolygonBoxBorder.GetBoundingSquareMeshWithHole(meshData, p.GetVertices(1));
+        var b = PolygonBoxBorder.AddMeshData(meshData, p.GetVertices(polySize));
 
-        var height = b.maxY - b.minY;
-        var width = b.maxX - b.minX;
-        // var height = 1;
-        // var width = 1;
-        // var meshData = new MeshData();
-        var wt = new WormholeTriangle(10);
-        wt.GetMeshWithRectangularHole(meshData, height, width);
+        var wt = new EquilateralTriangleWithRectHole(polySize * 10, b.GetHeight(), b.GetWidth());
+        wt.AddMeshData(meshData);
 
+        var origN = new Vector3(0, 0, 1);
+        var newN = new Vector3(1, 1, 1);
+        var t = new Transformer(origN, newN, new Vector3(100, 100, 100));
+        t.TransformMeshData(meshData, 0);
 
         MeshDrawer drawer = FindObjectOfType<MeshDrawer>();
         var texture = GetTexture();
         drawer.DrawMesh(meshData, texture);
     }
 
-    // public void MakeTriangleWithRectangleHole()
-    // {
-    //     var wt = new WormholeTriangle(10);
-    //     var meshData = wt.GetMeshWithRectangularHole(1, 1);
-    //     // p.GetBoundingSquareMeshWithHole(meshData);
-    //     MeshDrawer drawer = FindObjectOfType<MeshDrawer>();
-    //     var texture = GetTexture();
-    //     drawer.DrawMesh(meshData, texture);
-    // }
-
-    public void MakeEquilateralTriangleMesh()
+    public void MakeIco()
     {
-        Polygon p = new Polygon(3);
-        var meshData = p.GetMeshData(3);
-        // p.GetBoundingSquareMeshWithHole(meshData);
+        var meshData = Icosahedron.BuildFunIco();
         MeshDrawer drawer = FindObjectOfType<MeshDrawer>();
         var texture = GetTexture();
         drawer.DrawMesh(meshData, texture);
-    }
-
-    public void MakeBoxedPolygonMesh()
-    {
-        Polygon p = new Polygon(numSides);
-        var meshData = p.GetMeshData(1);
-        p.GetBoundingSquareMeshWithHole(meshData);
-        MeshDrawer drawer = FindObjectOfType<MeshDrawer>();
-        var texture = GetTexture();
-        drawer.DrawMesh(meshData, texture);
-    }
-
-    public void MakeCylinderMesh()
-    {
-        // TODO: the length used to calculate the uvs of the cylinder and the splay should both be length+totChangeInU since they share the same material/texture
-        if (Config.debugModeEnabled) Debug.Log("GenerateMesh invoked...");
-
-        if (Config.debugModeEnabled) Debug.Log("Getting texture...");
-        var texture = GetTexture();
-        var meshData = new MeshData();
-
-        if (Config.debugModeEnabled) Debug.Log("Getting mesh...");
-        var pc = new PolygonCylinder(numSides, length, polygonVertexRadius);
-        pc.AddPolygonCylinderToMesh(meshData);
-
-        if (addWormhole)
-        {
-            if (Config.debugModeEnabled) Debug.Log("Getting SPLAY data...");
-            var splayData = new SplayData(numSplaySubdivisions, totChangeInU);
-            if (Config.debugModeEnabled) splayData.SaveToCSV($"{Config.debugFilePath}/splayData.csv");
-
-            if (Config.debugModeEnabled) Debug.Log("Adding SPLAY mesh...");
-            var pcs = new PolygonalCylinderSplay(pc.polygon, pc.polygonVertexRadius, splayData);
-            pcs.AddPolygonalCylinderSplayToMesh(meshData);
-        }
-
-        if (Config.debugModeEnabled) Debug.Log("Drawing mesh...");
-        MeshDrawer drawer = FindObjectOfType<MeshDrawer>();
-        drawer.DrawMesh(meshData, texture);
-
-        Debug.Log("Mesh generation complete"); // always prints
+        Debug.Log("done");
     }
 
     private static Texture2D GetTexture()

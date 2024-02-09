@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PolygonCylinder
@@ -48,17 +49,18 @@ public class PolygonCylinder
             float zUv1 = z1 / totLength;
             float zUv2 = z2 / totLength;
 
+            List<int> vIdxs = new();
             // add the first triangle of the quad
-            int idx1 = meshData.AddVertex(new Vector3(poly1Vs[i2].x, poly1Vs[i2].y, z1), new Vector2(angularUv2, zUv1));
-            int idx2 = meshData.AddVertex(new Vector3(poly1Vs[i1].x, poly1Vs[i1].y, z1), new Vector2(angularUv1, zUv1));
-            int idx3 = meshData.AddVertex(new Vector3(poly2Vs[i1].x, poly2Vs[i1].y, z2), new Vector2(angularUv1, zUv2));
-            meshData.AddTriangleIdxs(idx1, idx2, idx3);
+            meshData.AddVertex(new Vector3(poly1Vs[i2].x, poly1Vs[i2].y, z1), vIdxs);
+            meshData.AddVertex(new Vector3(poly1Vs[i1].x, poly1Vs[i1].y, z1), vIdxs);
+            meshData.AddVertex(new Vector3(poly2Vs[i1].x, poly2Vs[i1].y, z2), vIdxs);
+            meshData.AddTriangleIdxs(vIdxs[0], vIdxs[1], vIdxs[2]);
 
             // add the second triangle of the quad
-            idx1 = meshData.AddVertex(new Vector3(poly2Vs[i2].x, poly2Vs[i2].y, z2), new Vector2(angularUv2, zUv2));
-            idx2 = meshData.AddVertex(new Vector3(poly1Vs[i2].x, poly1Vs[i2].y, z1), new Vector2(angularUv2, zUv1));
-            idx3 = meshData.AddVertex(new Vector3(poly2Vs[i1].x, poly2Vs[i1].y, z2), new Vector2(angularUv1, zUv2));
-            meshData.AddTriangleIdxs(idx1, idx2, idx3);
+            meshData.AddVertex(new Vector3(poly2Vs[i2].x, poly2Vs[i2].y, z2), vIdxs);
+            meshData.AddVertex(new Vector3(poly1Vs[i2].x, poly1Vs[i2].y, z1), vIdxs);
+            meshData.AddVertex(new Vector3(poly2Vs[i1].x, poly2Vs[i1].y, z2), vIdxs);
+            meshData.AddTriangleIdxs(vIdxs[3], vIdxs[4], vIdxs[5]);
         }
     }
 

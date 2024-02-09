@@ -5,7 +5,7 @@ public class MeshData
 {
     public List<Vector3> vertices;
     public List<int> triangleIdxs;
-    public List<Vector2> uvs;
+    // public List<Vector2> uvs;
 
     private int lastVertexIdx = -1;
 
@@ -13,17 +13,17 @@ public class MeshData
     {
         vertices = new List<Vector3>();
         triangleIdxs = new List<int>();
-        uvs = new List<Vector2>();
-        lastVertexIdx = -1;
+        // uvs = new List<Vector2>();
+        // lastVertexIdx = -1;
     }
 
-    public int AddVertex(Vector3 v, Vector2 uv)
+    public void AddVertex(Vector3 v, List<int> idxs)
     {
+        idxs.Add(vertices.Count);
         vertices.Add(v);
-        uvs.Add(uv);
 
-        lastVertexIdx++;
-        return lastVertexIdx;
+        // lastVertexIdx++;
+        // return lastVertexIdx;
     }
 
     public void AddTriangleIdxs(int i1, int i2, int i3)
@@ -64,49 +64,49 @@ public class MeshData
         {
             vertices = vertices.ToArray(),
             triangles = triangleIdxs.ToArray(),
-            uv = uvs.ToArray()
+            // uv = uvs.ToArray()
         };
         mesh.RecalculateNormals();
         return mesh;
     }
 }
 
-public static class DemoMeshData
-{
-    public static MeshData GetMeshDataForQuad()
-    {
-        MeshData meshData = new MeshData();
+// public static class DemoMeshData
+// {
+//     public static MeshData GetMeshDataForQuad()
+//     {
+//         MeshData meshData = new MeshData();
 
-        var v = new Vector3(0, 0, 0);
-        var uv = new Vector2(0, 0);
-        var vIdx1 = meshData.AddVertex(v, uv);
+//         var v = new Vector3(0, 0, 0);
+//         var uv = new Vector2(0, 0);
+//         var vIdx1 = meshData.AddVertex(v, uv);
 
-        v = new Vector3(1, 1, 0);
-        uv = new Vector2(1, 1);
-        var vIdx2 = meshData.AddVertex(v, uv);
+//         v = new Vector3(1, 1, 0);
+//         uv = new Vector2(1, 1);
+//         var vIdx2 = meshData.AddVertex(v, uv);
 
-        v = new Vector3(1, 0, 0);
-        uv = new Vector2(1, 0);
-        var vIdx3 = meshData.AddVertex(v, uv);
+//         v = new Vector3(1, 0, 0);
+//         uv = new Vector2(1, 0);
+//         var vIdx3 = meshData.AddVertex(v, uv);
 
-        meshData.AddTriangleIdxs(vIdx1, vIdx2, vIdx3); //CLOCKWISE
+//         meshData.AddTriangleIdxs(vIdx1, vIdx2, vIdx3); //CLOCKWISE
 
-        v = new Vector3(0, 0, 0);
-        uv = new Vector2(0, 0);
-        var vIdx4 = meshData.AddVertex(v, uv);
+//         v = new Vector3(0, 0, 0);
+//         uv = new Vector2(0, 0);
+//         var vIdx4 = meshData.AddVertex(v, uv);
 
-        v = new Vector3(0, 1, 0);
-        uv = new Vector2(0, 1);
-        var vIdx5 = meshData.AddVertex(v, uv);
+//         v = new Vector3(0, 1, 0);
+//         uv = new Vector2(0, 1);
+//         var vIdx5 = meshData.AddVertex(v, uv);
 
-        v = new Vector3(1, 1, 0);
-        uv = new Vector2(1, 1);
-        var vIdx6 = meshData.AddVertex(v, uv);
+//         v = new Vector3(1, 1, 0);
+//         uv = new Vector2(1, 1);
+//         var vIdx6 = meshData.AddVertex(v, uv);
 
-        meshData.AddTriangleIdxs(vIdx4, vIdx5, vIdx6); //CLOCKWISE
+//         meshData.AddTriangleIdxs(vIdx4, vIdx5, vIdx6); //CLOCKWISE
 
-        return meshData;
-    }
+//         return meshData;
+//     }
 
-    
-}
+
+// }
