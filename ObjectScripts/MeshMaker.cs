@@ -29,13 +29,56 @@ public class MeshMaker : MonoBehaviour
         Config.debugModeEnabled = debugModeEnabled;
         numSides *= 2;
         // MakeCylinderMesh();
-        MakeBoxedPolygonMesh();
+        // MakeBoxedPolygonMesh();
+        // MakeEquilateralTriangleMesh();
+        // MakeTriangleWithRectangleHole();
+        MakeTriangleWithPolygonHole();
+    }
+
+    public void MakeTriangleWithPolygonHole()
+    {
+        Polygon p = new Polygon(numSides);
+        var meshData = new MeshData();
+        var b = PolygonBoxBorder.GetBoundingSquareMeshWithHole(meshData, p.GetVertices(1));
+
+        var height = b.maxY - b.minY;
+        var width = b.maxX - b.minX;
+        // var height = 1;
+        // var width = 1;
+        // var meshData = new MeshData();
+        var wt = new WormholeTriangle(10);
+        wt.GetMeshWithRectangularHole(meshData, height, width);
+
+
+        MeshDrawer drawer = FindObjectOfType<MeshDrawer>();
+        var texture = GetTexture();
+        drawer.DrawMesh(meshData, texture);
+    }
+
+    // public void MakeTriangleWithRectangleHole()
+    // {
+    //     var wt = new WormholeTriangle(10);
+    //     var meshData = wt.GetMeshWithRectangularHole(1, 1);
+    //     // p.GetBoundingSquareMeshWithHole(meshData);
+    //     MeshDrawer drawer = FindObjectOfType<MeshDrawer>();
+    //     var texture = GetTexture();
+    //     drawer.DrawMesh(meshData, texture);
+    // }
+
+    public void MakeEquilateralTriangleMesh()
+    {
+        Polygon p = new Polygon(3);
+        var meshData = p.GetMeshData(3);
+        // p.GetBoundingSquareMeshWithHole(meshData);
+        MeshDrawer drawer = FindObjectOfType<MeshDrawer>();
+        var texture = GetTexture();
+        drawer.DrawMesh(meshData, texture);
     }
 
     public void MakeBoxedPolygonMesh()
     {
         Polygon p = new Polygon(numSides);
-        var meshData = p.GetMeshData();
+        var meshData = p.GetMeshData(1);
         p.GetBoundingSquareMeshWithHole(meshData);
         MeshDrawer drawer = FindObjectOfType<MeshDrawer>();
         var texture = GetTexture();

@@ -38,17 +38,18 @@ public class Polygon
         }
     }
 
-    public MeshData GetMeshData()
+    public MeshData GetMeshData(float vertexRadius)
     {
         var meshData = new MeshData();
 
         var originVertex = new Vector3(0, 0, 0);
         var originIdx = meshData.AddVertex(originVertex, new Vector2(0, 0));
+        var sizedVertices = GetVertices(vertexRadius);
         for (int i1 = 0; i1 < numSides; i1++)
         {
             var i2 = (i1 + 1) % numSides;
-            var v1 = vertices[i1];
-            var v2 = vertices[i2];
+            var v1 = sizedVertices[i1];
+            var v2 = sizedVertices[i2];
 
             var vIdx1 = meshData.AddVertex(v1, new Vector2(1, angularUvs[i1]));
             var vIdx2 = meshData.AddVertex(v2, new Vector2(1, angularUvs[i2]));
