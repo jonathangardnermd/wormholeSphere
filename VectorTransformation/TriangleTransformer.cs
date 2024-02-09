@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 
 
 // using System.Numerics;
@@ -10,6 +12,8 @@ public class TriangleTransformer
     Matrix4x4 combinedRotationMatrix;
     public TriangleTransformer(Vector3[] startVertices, Vector3[] endVertices)
     {
+        this.startVertices = startVertices;
+        this.endVertices = endVertices;
         Vector3 startNormal = CalcUnitNormal(startVertices);
         Vector3 endNormal = CalcUnitNormal(endVertices);
 
@@ -30,9 +34,10 @@ public class TriangleTransformer
         // rotate around normal to align
 
         // Step 1: rotate the first edge of the startTriangle to match up the normals
-        var startFirstEdge = startVertices[0] - startVertices[1];
-        var endFirstEdge = endVertices[0] - endVertices[1];
+        var startFirstEdge = (startVertices[0] - startVertices[1]).normalized;
+        var endFirstEdge = (endVertices[0] - endVertices[1]).normalized;
         var partiallyRotatedStartFirstEdge = RotateVector(firstRotationMatrix, startFirstEdge);
+        partiallyRotatedStartFirstEdge = partiallyRotatedStartFirstEdge.normalized;
 
         // Step 2: calculate the angle between the first edges
         float secondRotationAngle = Mathf.Acos(Vector3.Dot(partiallyRotatedStartFirstEdge, endFirstEdge));
@@ -41,14 +46,13 @@ public class TriangleTransformer
         Quaternion secondRotationQuaternion = Quaternion.AngleAxis(secondRotationAngle * Mathf.Rad2Deg, endNormal);
 
         // Step 4: Construct the transformation matrix with rotation to align the normal axes
-        var secondRotationMatrix = Matrix4x4.Rotate(secondRotationQuaternion);
+        // var secondRotationMatrix = Matrix4x4.Rotate(secondRotationQuaternion);
 
         // Combine the two rotation quaternions
         Quaternion combinedRotation = secondRotationQuaternion * rotationQuaternion;
 
         // Convert the combined rotation quaternion to a rotation matrix
-        combinedRotationMatrix = Matrix4x4.Rotate(combinedRotation);
-        // translate
+        this.combinedRotationMatrix = Matrix4x4.Rotate(combinedRotation);
     }
 
     public Vector3 CalcUnitNormal(Vector3[] triangleVertices)
@@ -61,5 +65,35 @@ public class TriangleTransformer
     public Vector3 RotateVector(Matrix4x4 rotationMatrix, Vector3 vectorToRotate)
     {
         return rotationMatrix.MultiplyPoint(vectorToRotate);
+    }
+
+    public void RotateVectors(Matrix4x4 rotationMatrix, Vector3[] vectorsToRotate)
+    {
+        for (int i = 0; i < vectorsToRotate.Length; i++)
+        {
+            vectorsToRotate[i] = rotationMatrix.MultiplyPoint(vectorsToRotate[i]);
+        }
+        // return rotationMatrix.MultiplyPoint(vectorToRotate);
+    }
+
+    public MeshData BuildMesh()
+    {
+        RotateVectors(combinedRotationMatrix, startVertices);
+
+        var meshData = new MeshData();
+
+        List<int> vIdxs = new();
+        meshData.AddVertex(startVertices[0], vIdxs);
+        meshData.AddVertex(startVertices[1], vIdxs);
+        meshData.AddVertex(startVertices[2], vIdxs);
+        meshData.AddTriangleIdxs(vIdxs[0], vIdxs[1], vIdxs[2]);
+
+        vIdxs = new();
+        meshData.AddVertex(endVertices[0], vIdxs);
+        meshData.AddVertex(endVertices[1], vIdxs);
+        meshData.AddVertex(endVertices[2], vIdxs);
+        meshData.AddTriangleIdxs(vIdxs[0], vIdxs[1], vIdxs[2]);
+
+        return meshData;
     }
 }

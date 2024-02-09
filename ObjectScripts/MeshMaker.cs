@@ -18,9 +18,36 @@ public class MeshMaker : MonoBehaviour
     {
         Config.debugModeEnabled = debugModeEnabled;
         // MakeTriangleWithPolygonHole();
-        MakeIco();
+        // MakeIco();
+        TestTransform();
     }
 
+    public void DrawMesh(MeshData meshData)
+    {
+        MeshDrawer drawer = FindObjectOfType<MeshDrawer>();
+        var texture = GetTexture();
+        drawer.DrawMesh(meshData, texture);
+    }
+
+    public void TestTransform()
+    {
+        Vector3[] startVs = {
+            new Vector3(0,0,0),
+            new Vector3(7.0710678f,7.0710678f,0),
+            new Vector3(-7.0710678f,7.0710678f,0)
+        };
+
+        Vector3[] endVs = {
+            new Vector3(10,-10,0),
+            new Vector3(0,-10,0),
+            new Vector3(0,-10,10)
+        };
+
+        var t = new TriangleTransformer(startVs, endVs);
+
+        var meshData = t.BuildMesh();
+        DrawMesh(meshData);
+    }
     public void MakeTriangleWithPolygonHole()
     {
         float polySize = 1f;
