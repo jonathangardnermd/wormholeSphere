@@ -9,6 +9,8 @@ public class TriangleTransformer
 {
     Vector3[] startVertices;
     Vector3[] endVertices;
+    Matrix4x4 firstRotationMatrix;
+    Matrix4x4 secondRotationMatrix;
     Matrix4x4 combinedRotationMatrix;
     public TriangleTransformer(Vector3[] startVertices, Vector3[] endVertices)
     {
@@ -16,6 +18,9 @@ public class TriangleTransformer
         this.endVertices = endVertices;
         Vector3 startNormal = CalcUnitNormal(startVertices);
         Vector3 endNormal = CalcUnitNormal(endVertices);
+
+        Debug.Log($"Start Normal: {startNormal}");
+        Debug.Log($"End Normal: {endNormal}");
 
         // rotate normals to align
         // Step 1: Calculate the rotation axis
@@ -25,11 +30,12 @@ public class TriangleTransformer
         float rotationAngle = Mathf.Acos(Vector3.Dot(startNormal, endNormal));
 
         // Step 3: Construct the rotation quaternion
-        Quaternion rotationQuaternion = Quaternion.AngleAxis(rotationAngle * Mathf.Rad2Deg, rotationAxis);
-
         // Step 4: Construct the transformation matrix with rotation to align the normal axes
-        var firstRotationMatrix = Matrix4x4.Rotate(rotationQuaternion);
+        Quaternion firstRotationQuaternion = Quaternion.AngleAxis(rotationAngle * Mathf.Rad2Deg, rotationAxis);
+        firstRotationMatrix = Matrix4x4.Rotate(firstRotationQuaternion);
 
+        Debug.Log($"Rotation Axis: {rotationAxis}");
+        Debug.Log($"Rotation Angle: {rotationAngle}");
 
         // rotate around normal to align
 
@@ -44,15 +50,22 @@ public class TriangleTransformer
 
         // Step 3: Construct the rotation quaternion using the endNormal as the rotation axis
         Quaternion secondRotationQuaternion = Quaternion.AngleAxis(secondRotationAngle * Mathf.Rad2Deg, endNormal);
+        secondRotationMatrix = Matrix4x4.Rotate(secondRotationQuaternion);
+
+        this.combinedRotationMatrix = Matrix4x4.Rotate(secondRotationQuaternion * firstRotationQuaternion);
+
+        Debug.Log($"Start First Edge: {startFirstEdge}");
+        Debug.Log($"End First Edge: {endFirstEdge}");
+        Debug.Log($"Partially Rotated Start First Edge: {partiallyRotatedStartFirstEdge}");
+        Debug.Log($"Second Rotation Angle: {secondRotationAngle}");
 
         // Step 4: Construct the transformation matrix with rotation to align the normal axes
         // var secondRotationMatrix = Matrix4x4.Rotate(secondRotationQuaternion);
 
         // Combine the two rotation quaternions
-        Quaternion combinedRotation = secondRotationQuaternion * rotationQuaternion;
+        // Quaternion combinedRotation = ;
 
         // Convert the combined rotation quaternion to a rotation matrix
-        this.combinedRotationMatrix = Matrix4x4.Rotate(combinedRotation);
     }
 
     public Vector3 CalcUnitNormal(Vector3[] triangleVertices)
@@ -78,16 +91,44 @@ public class TriangleTransformer
 
     public MeshData BuildMesh()
     {
-        RotateVectors(combinedRotationMatrix, startVertices);
-
         var meshData = new MeshData();
 
+        // startVs before rotation
         List<int> vIdxs = new();
         meshData.AddVertex(startVertices[0], vIdxs);
         meshData.AddVertex(startVertices[1], vIdxs);
         meshData.AddVertex(startVertices[2], vIdxs);
         meshData.AddTriangleIdxs(vIdxs[0], vIdxs[1], vIdxs[2]);
 
+
+        // startVs after rotation
+        RotateVectors(firstRotationMatrix, startVertices);
+        // RotateVectors(firstRotationMatrix, startVertices);
+
+        for (int i = 0; i < 3; i++)
+        {
+            Debug.Log($"After 1st rotation: start vertex #{i}: {startVertices[i]}");
+        }
+        vIdxs = new();
+        meshData.AddVertex(startVertices[0], vIdxs);
+        meshData.AddVertex(startVertices[1], vIdxs);
+        meshData.AddVertex(startVertices[2], vIdxs);
+        meshData.AddTriangleIdxs(vIdxs[0], vIdxs[1], vIdxs[2]);
+
+        RotateVectors(secondRotationMatrix, startVertices);
+        // RotateVectors(firstRotationMatrix, startVertices);
+
+        for (int i = 0; i < 3; i++)
+        {
+            Debug.Log($"After 2nd rotation: start vertex #{i}: {startVertices[i]}");
+        }
+        vIdxs = new();
+        meshData.AddVertex(startVertices[0], vIdxs);
+        meshData.AddVertex(startVertices[1], vIdxs);
+        meshData.AddVertex(startVertices[2], vIdxs);
+        meshData.AddTriangleIdxs(vIdxs[0], vIdxs[1], vIdxs[2]);
+
+        // endVs, purposely unchanged
         vIdxs = new();
         meshData.AddVertex(endVertices[0], vIdxs);
         meshData.AddVertex(endVertices[1], vIdxs);

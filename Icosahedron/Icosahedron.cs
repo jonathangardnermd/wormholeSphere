@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+
 public class Icosahedron
 {
     public static readonly float SIZE_FACTOR = 20;
@@ -72,6 +73,7 @@ public class Icosahedron
         var v2 = vertices[tIdxs[1]];
         SIDE_LENGTH = Vector3.Distance(v1, v2);
     }
+
     public static MeshData BuildFunIco()
     {
         Init();
