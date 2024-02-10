@@ -67,7 +67,7 @@ public class Icosahedron
     public Mesh BuildFunIco(int numSides)
     {
         Init();
-        MeshData meshData = new MeshData();
+        // MeshData meshData = new MeshData();
 
         List<WormholeTriangle> ts = new();
         for (int i = 0; i < icoTriangleIdxs.Length; i++)

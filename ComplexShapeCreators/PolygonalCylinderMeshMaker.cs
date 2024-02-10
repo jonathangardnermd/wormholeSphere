@@ -7,7 +7,7 @@ public class PolygonCylinder
     public float length;
     public float polygonVertexRadius;
 
-    public Polygon polygon;
+    public Polygon2 polygon;
 
     public PolygonCylinder(int numSides, float length, float polygonVertexRadius)
     {
@@ -20,9 +20,9 @@ public class PolygonCylinder
     This function will create the sides of the cylinder by "stacking" two polygons: 
     one at z=-length and the other at z=0.
     */
-    public void AddPolygonCylinderToMesh(MeshData meshData)
+    public void AddPolygonCylinderToMesh(MeshData2 meshData)
     {
-        polygon = new Polygon(numSides); // calculate the vertices of a unit regular polygon with the specified number of sides
+        polygon = new Polygon2(numSides); // calculate the vertices of a unit regular polygon with the specified number of sides
 
         // "stacking" the polygons creates the triangles and vertices to connect them, forming the sides of the cylinder
         StackPolygons(meshData, polygon, length, polygonVertexRadius, polygonVertexRadius, -length, 0);
@@ -30,11 +30,11 @@ public class PolygonCylinder
         if (Config.debugModeEnabled) PrintDebugInfo(meshData);
     }
 
-    public static void StackPolygons(MeshData meshData, Polygon polygon, float totLength, float vertexRadius1, float vertexRadius2, float z1, float z2)
+    public static void StackPolygons(MeshData2 meshData, Polygon2 polygon, float totLength, float vertexRadius1, float vertexRadius2, float z1, float z2)
     {
         // calculate the vertices of the two polygons with the two (potentially different) radii
-        Vector2[] poly1Vs = polygon.GetVertices(vertexRadius1);
-        Vector2[] poly2Vs = polygon.GetVertices(vertexRadius2);
+        Vector3[] poly1Vs = polygon.GetVertices(vertexRadius1);
+        Vector3[] poly2Vs = polygon.GetVertices(vertexRadius2);
 
         // float[] angularUvs = polygon.angularUvs;
 
@@ -49,25 +49,26 @@ public class PolygonCylinder
             float zUv1 = z1 / totLength;
             float zUv2 = z2 / totLength;
 
+            var startIdx = meshData.vertices.Count;
             List<int> vIdxs = new();
             // add the first triangle of the quad
-            meshData.AddVertex(new Vector3(poly1Vs[i2].x, poly1Vs[i2].y, z1), vIdxs);
-            meshData.AddVertex(new Vector3(poly1Vs[i1].x, poly1Vs[i1].y, z1), vIdxs);
-            meshData.AddVertex(new Vector3(poly2Vs[i1].x, poly2Vs[i1].y, z2), vIdxs);
-            meshData.AddTriangleIdxs(vIdxs[0], vIdxs[1], vIdxs[2]);
+            meshData.AddVertex(new Vector3(poly1Vs[i2].x, poly1Vs[i2].y, z1));
+            meshData.AddVertex(new Vector3(poly1Vs[i1].x, poly1Vs[i1].y, z1));
+            meshData.AddVertex(new Vector3(poly2Vs[i1].x, poly2Vs[i1].y, z2));
+            meshData.AddTriangleIdxs(startIdx + 0, startIdx + 1, startIdx + 2);
 
             // add the second triangle of the quad
-            meshData.AddVertex(new Vector3(poly2Vs[i2].x, poly2Vs[i2].y, z2), vIdxs);
-            meshData.AddVertex(new Vector3(poly1Vs[i2].x, poly1Vs[i2].y, z1), vIdxs);
-            meshData.AddVertex(new Vector3(poly2Vs[i1].x, poly2Vs[i1].y, z2), vIdxs);
-            meshData.AddTriangleIdxs(vIdxs[3], vIdxs[4], vIdxs[5]);
+            meshData.AddVertex(new Vector3(poly2Vs[i2].x, poly2Vs[i2].y, z2));
+            meshData.AddVertex(new Vector3(poly1Vs[i2].x, poly1Vs[i2].y, z1));
+            meshData.AddVertex(new Vector3(poly2Vs[i1].x, poly2Vs[i1].y, z2));
+            meshData.AddTriangleIdxs(startIdx + 3, startIdx + 4, startIdx + 5);
         }
     }
 
-    private void PrintDebugInfo(MeshData meshData)
+    private void PrintDebugInfo(MeshData2 meshData)
     {
-        Debug.Log("Triangles used:\n" + meshData.TrianglesToString());
-        Debug.Log($"NumVertices={meshData.vertices.Count}, NumTriangleIdxs={meshData.triangleIdxs.Count}, NumTriangles={meshData.Triangles.Length}");
+        // Debug.Log("Triangles used:\n" + meshData.TrianglesToString());
+        Debug.Log($"NumVertices={meshData.vertices.Count}, NumTriangleIdxs={meshData.triangleIdxs.Count}");
     }
 }
 

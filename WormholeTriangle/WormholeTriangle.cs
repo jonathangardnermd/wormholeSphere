@@ -75,77 +75,38 @@ public class WormholeTriangle
         // meshData.AddTriangleIdxs(vIdxs[0], vIdxs[1], vIdxs[2]);
 
     }
-    public static void AddTriangleWithPolygonHoleToMesh2(MeshData meshData, float sideLength
-    , Vector3[] triangleVerts, int polyNumSides, float polyVertexRadius)
-    {
-        float vertexRadius = sideLength / sqrt3;
-        Polygon p = new Polygon(3);
-        var startVertices = p.GetVertices(vertexRadius);
+    // public static void AddTriangleWithPolygonHoleToMesh2(MeshData2 meshData, float sideLength
+    // , Vector3[] triangleVerts, int polyNumSides, float polyVertexRadius)
+    // {
+    //     float vertexRadius = sideLength / sqrt3;
+    //     Polygon2 p = new Polygon2(3);
+    //     var startVertices3D = p.GetVertices(vertexRadius);
 
-        Vector3[] startVertices3D = new Vector3[startVertices.Length];
-        for (int i = 0; i < startVertices.Length; i++)
-        {
-            // Convert each Vector2 to Vector3, setting the Z component to the specified value
-            startVertices3D[i] = new Vector3(startVertices[i].x, startVertices[i].y, 0);
-        }
-        TriangleTransformer tt = new TriangleTransformer(startVertices3D, triangleVerts);
-        tt.TransformVectors(tt.combinedRotationMatrix, tt.centerVector * 1f, startVertices3D);
+    //     TriangleTransformer tt = new TriangleTransformer(startVertices3D, triangleVerts);
+    //     tt.TransformVectors(tt.combinedRotationMatrix, tt.centerVector * 1f, startVertices3D);
 
 
-        List<int> vIdxs = new();
-        // for (int i = 0; i < triangleVerts.Length; i++)
-        // {
-        //     meshData.AddVertex(triangleVerts[i], vIdxs);
-        // }
-        // meshData.AddTriangleIdxs(vIdxs[0], vIdxs[1], vIdxs[2]);
+    //     List<int> vIdxs = new();
 
 
-        vIdxs = new();
-        for (int i = 0; i < startVertices3D.Length; i++)
-        {
-            meshData.AddVertex(startVertices3D[i], vIdxs);
-        }
-        meshData.AddTriangleIdxs(vIdxs[0], vIdxs[1], vIdxs[2]);
+    //     vIdxs = new();
+    //     for (int i = 0; i < startVertices3D.Length; i++)
+    //     {
+    //         meshData.AddVertex(startVertices3D[i], vIdxs);
+    //     }
+    //     meshData.AddTriangleIdxs(vIdxs[0], vIdxs[1], vIdxs[2]);
 
-    }
-    public static void AddTriangleWithPolygonHoleToMesh3(MeshData meshData, float sideLength
-    , Vector3[] triangleVerts, int polyNumSides, float polyVertexRadius)
-    {
-        float vertexRadius = sideLength / sqrt3;
-        Polygon p = new Polygon(3);
-        var startVertices = p.GetVertices(vertexRadius);
+    // }
+    // public static void AddTriangleWithPolygonHoleToMesh3(MeshData meshData, float sideLength
+    // , Vector3[] triangleVerts, int polyNumSides, float polyVertexRadius)
+    // {
+    //     float vertexRadius = sideLength / sqrt3;
+    //     Polygon2 p = new Polygon2(3);
+    //     var startVertices3D = p.GetVertices(vertexRadius);
 
-        Vector3[] startVertices3D = new Vector3[startVertices.Length];
-        for (int i = 0; i < startVertices.Length; i++)
-        {
-            // Convert each Vector2 to Vector3, setting the Z component to the specified value
-            startVertices3D[i] = new Vector3(startVertices[i].x, startVertices[i].y, 0);
-        }
-        TriangleTransformer tt = new TriangleTransformer(startVertices3D, triangleVerts);
-        // tt.TransformVectors(tt.combinedRotationMatrix, tt.translationVector * 2, startVertices3D);
-        tt.BuildMesh(meshData);
-
-        // List<int> vIdxs = new();
-        // for (int i = 0; i < triangleVerts.Length; i++)
-        // {
-        //     meshData.AddVertex(triangleVerts[i], vIdxs);
-        // }
-        // meshData.AddTriangleIdxs(vIdxs[0], vIdxs[1], vIdxs[2]);
-
-
-        // vIdxs = new();
-        // for (int i = 0; i < startVertices3D.Length; i++)
-        // {
-        //     meshData.AddVertex(startVertices3D[i], vIdxs);
-        // }
-        // meshData.AddTriangleIdxs(vIdxs[0], vIdxs[1], vIdxs[2]);
-
-    }
-
-    public void CalcTriangleVertexRadiusFromVertices()
-    {
-
-    }
+    //     TriangleTransformer tt = new TriangleTransformer(startVertices3D, triangleVerts);
+    //     tt.BuildMesh(meshData);
+    // }
 
 
 }

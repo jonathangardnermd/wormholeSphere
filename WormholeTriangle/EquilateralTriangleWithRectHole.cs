@@ -9,7 +9,7 @@ public class EquilateralTriangleWithRectHole
     public float vertexRadius;
     public float halfRectHeight;
     public float halfRectWidth;
-    public Vector2[] triangleVertices;
+    public Vector3[] triangleVertices;
     public MeshData2 meshData;
 
     public EquilateralTriangleWithRectHole(float vertexRadius, float rectHeight, float rectWidth)
@@ -19,7 +19,7 @@ public class EquilateralTriangleWithRectHole
         this.halfRectHeight = rectHeight / 2f;
         this.halfRectWidth = rectWidth / 2f;
 
-        var polygon = new Polygon(3);
+        var polygon = new Polygon2(3);
         triangleVertices = polygon.GetVertices(vertexRadius);
     }
 
