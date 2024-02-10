@@ -127,12 +127,13 @@ public class TriangleTransformer
 
     }
 
-    public void TransformVectors(Matrix4x4 rotationMatrix, Vector3 translationV, Vector3[] vectorsToTransform)
+    public Vector3[] TransformVectors(Matrix4x4 rotationMatrix, Vector3 translationV, Vector3[] vectorsToTransform)
     {
         for (int i = 0; i < vectorsToTransform.Length; i++)
         {
             vectorsToTransform[i] = TransformVector(rotationMatrix, translationV, vectorsToTransform[i]);
         }
+        return vectorsToTransform;
         // return rotationMatrix.MultiplyPoint(vectorToRotate);
 
     }

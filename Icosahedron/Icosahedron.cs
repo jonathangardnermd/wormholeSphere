@@ -50,16 +50,6 @@ public class Icosahedron
         new Vector3(-t, 0, -1).normalized,
         new Vector3(-t, 0, 1).normalized
     };
-    // private List<TriangleIdxs> triangles;
-    // private List<Vector3> vertices;
-
-    // public List<TriangleIdxs> TriangleIdxs { get => triangles; private set => triangles = value; }
-    // public List<Vector3> Vertices { get => vertices; private set => vertices = value; }
-
-    // public Icosahedron(float sizeFactor)
-    // {
-
-    // }
 
     public static void Init()
     {
@@ -87,27 +77,8 @@ public class Icosahedron
             {
                 triVerts[j] = vertices[triVertIdxs[j]];
             }
-            WormholeTriangle.AddTriangleWithPolygonHoleToMesh2(meshData, SIDE_LENGTH, triVerts, 6, 1f);
+            WormholeTriangle.AddTriangleWithPolygonHoleToMesh(meshData, SIDE_LENGTH, triVerts, 6, 1f);
         }
         return meshData;
     }
-    // public static MeshData BuildFunIco()
-    // {
-    //     // build and use TriangleTransformer
-    //     // make sure sideLength of ending triangles is the same as beginning!
-    //     Init();
-    //     MeshData meshData = new MeshData();
-
-    //     for (int i = 0; i < icoTriangleIdxs.Length; i++)
-    //     {
-    //         var triVertIdxs = icoTriangleIdxs[i];
-    //         Vector3[] triVerts = new Vector3[3];
-    //         for (int j = 0; j < 3; j++)
-    //         {
-    //             triVerts[j] = vertices[triVertIdxs[j]];
-    //         }
-    //         WormholeTriangle.AddTriangleWithPolygonHoleToMesh2(meshData, SIDE_LENGTH, triVerts, 6, 1f);
-    //     }
-    //     return meshData;
-    // }
 }
