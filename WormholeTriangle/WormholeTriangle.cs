@@ -47,10 +47,8 @@ public class WormholeTriangle
 
         pb.BuildMeshData();
         triangle.BuildMeshData();
-        pb.meshData.vertices = tt.TransformVectors(
-            tt.combinedRotationMatrix, tt.centerVector, pb.meshData.vertices).ToList();
-        triangle.meshData.vertices = tt.TransformVectors(
-            tt.combinedRotationMatrix, tt.centerVector, triangle.meshData.vertices).ToList();
+        pb.meshData.vertices = tt.TransformVectors(pb.meshData.vertices).ToList();
+        triangle.meshData.vertices = tt.TransformVectors(triangle.meshData.vertices).ToList();
         // var mesh = MeshData2.CreateMesh(pb.meshData, triangle.meshData);
         // transform ALL the vertices we've added since setting the breakpoint
         // var transformedVertices = tt.TransformVectors(tt.combinedRotationMatrix, tt.centerVector, meshData.vertices.Skip(startVertexCt).ToArray());

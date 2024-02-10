@@ -1,9 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.Video;
-
-
-// using System.Numerics;
 
 public class TriangleTransformer
 {
@@ -20,36 +17,26 @@ public class TriangleTransformer
         Vector3 startNormal = CalcUnitNormal(startVertices);
         Vector3 endNormal = CalcUnitNormal(endVertices);
 
-        Debug.Log($"Start Normal: {startNormal}");
-        Debug.Log($"End Normal: {endNormal}");
+        // Debug.Log($"Start Normal: {startNormal}");
+        // Debug.Log($"End Normal: {endNormal}");
 
-        // rotate normals to align
-        // Step 1: Calculate the rotation axis
         Vector3 rotationAxis = Vector3.Cross(startNormal, endNormal).normalized;
 
-        // Step 2: Calculate the rotation angle
         float rotationAngle = Mathf.Acos(Vector3.Dot(startNormal, endNormal));
 
-        // Step 3: Construct the rotation quaternion
-        // Step 4: Construct the transformation matrix with rotation to align the normal axes
         Quaternion firstRotationQuaternion = Quaternion.AngleAxis(rotationAngle * Mathf.Rad2Deg, rotationAxis);
         firstRotationMatrix = Matrix4x4.Rotate(firstRotationQuaternion);
 
-        Debug.Log($"Rotation Axis: {rotationAxis}");
-        Debug.Log($"Rotation Angle: {rotationAngle}");
-
-        // rotate around normal to align
+        // Debug.Log($"Rotation Axis: {rotationAxis}");
+        // Debug.Log($"Rotation Angle: {rotationAngle}");
 
         centerVector = CalcCenter();
 
-        // Step 1: rotate the first edge of the startTriangle to match up the normals
         var startFirstV = startVertices[0].normalized;
         var endFirstV = (endVertices[0] - centerVector).normalized;
         var partiallyRotatedStartFirstV = RotateVector(firstRotationMatrix, startFirstV).normalized;
 
-        // Step 2: calculate the rotation axis using cross product
         Vector3 secondRotationAxis = Vector3.Cross(partiallyRotatedStartFirstV, endFirstV).normalized;
-
 
         var dot = Vector3.Dot(partiallyRotatedStartFirstV, endFirstV);
 
@@ -60,97 +47,71 @@ public class TriangleTransformer
             // Handle the case where the rotation axis is close to zero
         }
 
-
-        // Step 3: calculate the angle using dot product
         float secondRotationAngle = Mathf.Acos(dot);
-
-        // Step 4: Construct the rotation quaternion using the calculated axis and angle
         Quaternion secondRotationQuaternion = Quaternion.AngleAxis(secondRotationAngle * Mathf.Rad2Deg, secondRotationAxis);
         secondRotationMatrix = Matrix4x4.Rotate(secondRotationQuaternion);
-
-        // // Step 1: rotate the first edge of the startTriangle to match up the normals
-        // var startFirstV = startVertices[0].normalized;
-        // var endFirstV = (endVertices[0] - centerVector).normalized;
-        // var partiallyRotatedStartFirstV = RotateVector(firstRotationMatrix, startFirstV);
-        // partiallyRotatedStartFirstV = partiallyRotatedStartFirstV.normalized;
-
-        // // Step 2: calculate the angle between the first edges
-        // float secondRotationAngle = Mathf.Acos(Vector3.Dot(partiallyRotatedStartFirstV, endFirstV));
-
-        // // Step 3: Construct the rotation quaternion using the endNormal as the rotation axis
-        // Quaternion secondRotationQuaternion = Quaternion.AngleAxis(secondRotationAngle * Mathf.Rad2Deg, endNormal);
-        // secondRotationMatrix = Matrix4x4.Rotate(secondRotationQuaternion);
-
         this.combinedRotationMatrix = Matrix4x4.Rotate(secondRotationQuaternion * firstRotationQuaternion);
 
-        Debug.Log($"Start First V: {startFirstV}");
-        Debug.Log($"End First V: {endFirstV}");
-        Debug.Log($"centerVector: {centerVector}");
-        Debug.Log($"Second Rotation Axis: {secondRotationAxis}");
-        Debug.Log($"Partially Rotated Start First Edge: {partiallyRotatedStartFirstV}");
-        Debug.Log($"Second Rotation Angle: {secondRotationAngle}");
+        // Debug.Log($"Start First V: {startFirstV}");
+        // Debug.Log($"End First V: {endFirstV}");
+        // Debug.Log($"centerVector: {centerVector}");
+        // Debug.Log($"Second Rotation Axis: {secondRotationAxis}");
+        // Debug.Log($"Partially Rotated Start First Edge: {partiallyRotatedStartFirstV}");
+        // Debug.Log($"Second Rotation Angle: {secondRotationAngle}");
     }
-    public Vector3 CalcCenter()
+    private Vector3 CalcCenter()
     {
-        // Calculate the average difference between corresponding vertices
-        Vector3 sumDifference = Vector3.zero;
-        for (int i = 0; i < startVertices.Length; i++)
+        Vector3 totV = Vector3.zero;
+        for (int i = 0; i < 3; i++)
         {
-            sumDifference += endVertices[i] - startVertices[i];
+            totV += endVertices[i];
         }
-        return sumDifference / startVertices.Length;
+        return totV / 3;
     }
 
-    Vector3 ApplyTranslation(Vector3 v, Vector3 translationV)
+    private Vector3 RotateVector(Matrix4x4 rotationMatrix, Vector3 vectorToRotate)
+    {
+        return rotationMatrix.MultiplyPoint(vectorToRotate);
+    }
+
+    private Vector3 TranslateVector(Vector3 v, Vector3 translationV)
     {
         return v + translationV;
     }
-    public Vector3 CalcUnitNormal(Vector3[] triangleVertices)
+
+    private Vector3 TransformVector(Matrix4x4 rotationMatrix, Vector3 translationV, Vector3 vectorToTransform)
+    {
+        var rotatedV = RotateVector(rotationMatrix, vectorToTransform);
+        var transformedV = TranslateVector(rotatedV, translationV);
+        return transformedV;
+    }
+
+    private Vector3 CalcUnitNormal(Vector3[] triangleVertices)
     {
         Vector3 edge1 = triangleVertices[0] - triangleVertices[1];
         Vector3 edge2 = triangleVertices[1] - triangleVertices[2];
         return Vector3.Cross(edge1, edge2).normalized;
     }
 
-    public Vector3 RotateVector(Matrix4x4 rotationMatrix, Vector3 vectorToRotate)
-    {
-        return rotationMatrix.MultiplyPoint(vectorToRotate);
-    }
-
-    public void RotateVectors(Matrix4x4 rotationMatrix, Vector3[] vectorsToRotate)
-    {
-        for (int i = 0; i < vectorsToRotate.Length; i++)
-        {
-            vectorsToRotate[i] = RotateVector(rotationMatrix, vectorsToRotate[i]);
-        }
-        // return rotationMatrix.MultiplyPoint(vectorToRotate);
-
-    }
-
-    // public Vector3[] TransformVectors(Matrix4x4 rotationMatrix, Vector3 translationV, Vector3[] vectorsToTransform)
+    // public void RotateVectors(Matrix4x4 rotationMatrix, Vector3[] vectorsToRotate)
     // {
-    //     for (int i = 0; i < vectorsToTransform.Length; i++)
+    //     for (int i = 0; i < vectorsToRotate.Length; i++)
     //     {
-    //         vectorsToTransform[i] = TransformVector(rotationMatrix, translationV, vectorsToTransform[i]);
+    //         vectorsToRotate[i] = RotateVector(rotationMatrix, vectorsToRotate[i]);
     //     }
-    //     return vectorsToTransform;
     //     // return rotationMatrix.MultiplyPoint(vectorToRotate);
 
     // }
-    public IEnumerable<Vector3> TransformVectors(Matrix4x4 rotationMatrix, Vector3 translationV, IEnumerable<Vector3> vectorsToTransform)
+
+    public IEnumerable<Vector3> TransformVectors(IEnumerable<Vector3> vectorsToTransform)
     {
         foreach (Vector3 vectorToTransform in vectorsToTransform)
         {
-            yield return TransformVector(rotationMatrix, translationV, vectorToTransform);
+            yield return TransformVector(combinedRotationMatrix, centerVector, vectorToTransform);
         }
     }
 
-    public Vector3 TransformVector(Matrix4x4 rotationMatrix, Vector3 translationV, Vector3 vectorToTransform)
-    {
-        var rotatedV = RotateVector(rotationMatrix, vectorToTransform);
-        var transformedV = ApplyTranslation(rotatedV, translationV);
-        return transformedV;
-    }
+
 
     // public MeshData2 BuildMesh(MeshData meshData)
     // {
