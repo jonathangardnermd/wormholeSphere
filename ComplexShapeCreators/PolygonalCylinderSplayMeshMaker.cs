@@ -50,17 +50,7 @@ public class PolygonalCylinderSplay
         // "stack" one more polygon at the same z coord as the last one in order to form the "plane".
         int planeSizeFactor = 10;
         PolygonCylinder.StackPolygons(meshData, polygon, totSplayLength, nextVertexRadius, nextVertexRadius * planeSizeFactor, prevZ, prevZ);
-
-        // if (Config.debugModeEnabled) PrintDebugInfo(meshData);
     }
-
-    // private void PrintDebugInfo(MeshData2 meshData)
-    // {
-    //     // var triangleStr = meshData.TrianglesToString();
-    //     // Debug.Log("After splay: Triangles used:\n" + triangleStr);
-    //     // SaveToCSV(triangleStr, $"{Config.debugFilePath}/triangles.txt");
-    //     Debug.Log($"After splay: NumVertices={meshData.vertices.Count}, NumTriangleIdxs={meshData.triangleIdxs.Count}");
-    // }
 
     private void SaveToCSV(string triangleStr, string filePath)
     {

@@ -26,8 +26,6 @@ public class PolygonCylinder
 
         // "stacking" the polygons creates the triangles and vertices to connect them, forming the sides of the cylinder
         StackPolygons(meshData, polygon, length, polygonVertexRadius, polygonVertexRadius, -length, 0);
-
-        // if (Config.debugModeEnabled) PrintDebugInfo(meshData);
     }
 
     public static void StackPolygons(MeshData meshData, Polygon polygon, float totLength, float vertexRadius1, float vertexRadius2, float z1, float z2)
@@ -46,8 +44,8 @@ public class PolygonCylinder
             // set the uv data in the 2 dimensions (angular and z directions) to stretch the texture correctly
             // float angularUv1 = angularUvs[i1];
             // float angularUv2 = angularUvs[i2];
-            float zUv1 = z1 / totLength;
-            float zUv2 = z2 / totLength;
+            // float zUv1 = z1 / totLength;
+            // float zUv2 = z2 / totLength;
 
             var startIdx = meshData.vertices.Count;
             List<int> vIdxs = new();
@@ -64,11 +62,5 @@ public class PolygonCylinder
             meshData.AddTriangleIdxs(startIdx + 3, startIdx + 4, startIdx + 5);
         }
     }
-
-    // private void PrintDebugInfo(MeshData2 meshData)
-    // {
-    //     // Debug.Log("Triangles used:\n" + meshData.TrianglesToString());
-    //     Debug.Log($"NumVertices={meshData.vertices.Count}, NumTriangleIdxs={meshData.triangleIdxs.Count}");
-    // }
 }
 
