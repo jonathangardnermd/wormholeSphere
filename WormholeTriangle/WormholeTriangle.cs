@@ -76,8 +76,6 @@ public class WormholeTriangle
 
 
 
-
-
         var startVertexCt = meshData.vertices.Count;
         var poly = new Polygon(polyNumSides);
         var b = PolygonBoxBorder.AddMeshData(meshData, poly.GetVertices(polyVertexRadius));
