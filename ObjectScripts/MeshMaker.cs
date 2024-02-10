@@ -18,8 +18,8 @@ public class MeshMaker : MonoBehaviour
     {
         Config.debugModeEnabled = debugModeEnabled;
         // MakeTriangleWithPolygonHole();
-        // MakeIco();
-        TestTransform();
+        MakeIco();
+        // TestTransform();
     }
 
     public void DrawMesh(MeshData meshData)
@@ -62,7 +62,7 @@ public class MeshMaker : MonoBehaviour
 
         var t = new TriangleTransformer(startVs, endVs);
 
-        var meshData = t.BuildMesh();
+        var meshData = t.BuildMesh(new MeshData());
         DrawMesh(meshData);
     }
     public void MakeTriangleWithPolygonHole()
