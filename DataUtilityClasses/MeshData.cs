@@ -1,73 +1,62 @@
-// using UnityEngine;
-// using System.Collections.Generic;
+using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
+using System;
+public class MeshData
+{
+    public List<Vector3> vertices;
+    public List<int> triangleIdxs;
 
-// public class MeshData
-// {
-//     public List<Vector3> vertices;
-//     public List<int> triangleIdxs;
-//     // public List<Vector2> uvs;
+    public MeshData()
+    {
+        vertices = new List<Vector3>();
+        triangleIdxs = new();
+    }
 
-//     private int lastVertexIdx = -1;
+    public void AddVertex(Vector3 v)
+    {
+        vertices.Add(v);
+    }
 
-//     public MeshData()
-//     {
-//         vertices = new List<Vector3>();
-//         triangleIdxs = new List<int>();
-//         // uvs = new List<Vector2>();
-//         // lastVertexIdx = -1;
-//     }
+    public void AddTriangleIdxs(int i1, int i2, int i3)
+    {
+        triangleIdxs.Add(i1);
+        triangleIdxs.Add(i2);
+        triangleIdxs.Add(i3);
+    }
 
-//     public void AddVertex(Vector3 v, List<int> idxs)
-//     {
-//         idxs.Add(vertices.Count);
-//         vertices.Add(v);
+    public static Mesh CreateMesh(IEnumerable<MeshData> meshDatas)
+    {
+        int totNumVs = meshDatas.Sum(meshData => meshData.vertices.Count);
+        int totNumTidxs = meshDatas.Sum(meshData => meshData.triangleIdxs.Count);
 
-//         // lastVertexIdx++;
-//         // return lastVertexIdx;
-//     }
+        Vector3[] vertices = new Vector3[totNumVs];
+        int[] tIdxs = new int[totNumTidxs];
 
-//     public void AddTriangleIdxs(int i1, int i2, int i3)
-//     {
-//         triangleIdxs.Add(i1);
-//         triangleIdxs.Add(i2);
-//         triangleIdxs.Add(i3);
-//     }
+        int vertIndex = 0;
+        int tIdxIndex = 0;
 
-//     public Triangle[] Triangles
-//     {
-//         get
-//         {
-//             int triangleCount = triangleIdxs.Count / 3;
-//             Triangle[] triangleArray = new Triangle[triangleCount];
-//             for (int i = 0; i < triangleCount; i++)
-//             {
-//                 int idx = i * 3;
-//                 triangleArray[i] = new Triangle(vertices[triangleIdxs[idx]], vertices[triangleIdxs[idx + 1]], vertices[triangleIdxs[idx + 2]]);
-//             }
-//             return triangleArray;
-//         }
-//     }
+        foreach (var meshData in meshDatas)
+        {
+            for (int i = 0; i < meshData.vertices.Count; i++)
+            {
+                vertices[vertIndex + i] = meshData.vertices[i];
+            }
+            for (int i = 0; i < meshData.triangleIdxs.Count; i++)
+            {
+                tIdxs[tIdxIndex + i] = meshData.triangleIdxs[i] + vertIndex;
+            }
 
-//     public string TrianglesToString()
-//     {
-//         string result = "";
-//         foreach (Triangle t in Triangles)
-//         {
-//             result += t.ToString() + "\n";
-//         }
-//         return result;
-//     }
-
-//     public Mesh CreateMesh()
-//     {
-//         Mesh mesh = new Mesh
-//         {
-//             vertices = vertices.ToArray(),
-//             triangles = triangleIdxs.ToArray(),
-//             // uv = uvs.ToArray()
-//         };
-//         mesh.RecalculateNormals();
-//         return mesh;
-//     }
-// }
-
+            // Update indices
+            vertIndex += meshData.vertices.Count;
+            tIdxIndex += meshData.triangleIdxs.Count;
+        }
+        Mesh mesh = new Mesh
+        {
+            vertices = vertices,
+            triangles = tIdxs,
+        };
+        mesh.RecalculateNormals();
+        return mesh;
+    }
+}

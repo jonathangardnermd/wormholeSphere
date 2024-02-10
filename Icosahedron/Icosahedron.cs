@@ -67,8 +67,6 @@ public class Icosahedron
     public Mesh BuildFunIco(int numSides)
     {
         Init();
-        // MeshData meshData = new MeshData();
-
         List<WormholeTriangle> ts = new();
         for (int i = 0; i < icoTriangleIdxs.Length; i++)
         {
@@ -79,13 +77,13 @@ public class Icosahedron
                 triVerts[j] = vertices[triVertIdxs[j]];
             }
             var wt = new WormholeTriangle(SIDE_LENGTH, triVerts, numSides * 2, 1f);
+            wt.BuildMeshData();
             ts.Add(wt);
-            // WormholeTriangle.AddTriangleWithPolygonHoleToMesh(SIDE_LENGTH, triVerts, 6, 1f);
         }
 
-        IEnumerable<MeshData2> meshDataList = ts
+        IEnumerable<MeshData> meshDataList = ts
             .SelectMany(wt => new[] { wt.pb.meshData, wt.triangle.meshData });
-        var mesh = MeshData2.CreateMesh(meshDataList);
+        var mesh = MeshData.CreateMesh(meshDataList);
         return mesh;
     }
 }

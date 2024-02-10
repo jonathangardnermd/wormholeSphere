@@ -43,8 +43,8 @@ public class TriangleTransformer
         const float epsilon = 0.0001f; // Define a small tolerance
         if (secondRotationAxis.magnitude < epsilon)
         {
+            // Handle the case where the rotation axis is close to zero bc the vectors are parallel/anti-parallel
             secondRotationAxis = endNormal;
-            // Handle the case where the rotation axis is close to zero
         }
 
         float secondRotationAngle = Mathf.Acos(dot);
@@ -93,16 +93,6 @@ public class TriangleTransformer
         return Vector3.Cross(edge1, edge2).normalized;
     }
 
-    // public void RotateVectors(Matrix4x4 rotationMatrix, Vector3[] vectorsToRotate)
-    // {
-    //     for (int i = 0; i < vectorsToRotate.Length; i++)
-    //     {
-    //         vectorsToRotate[i] = RotateVector(rotationMatrix, vectorsToRotate[i]);
-    //     }
-    //     // return rotationMatrix.MultiplyPoint(vectorToRotate);
-
-    // }
-
     public IEnumerable<Vector3> TransformVectors(IEnumerable<Vector3> vectorsToTransform)
     {
         foreach (Vector3 vectorToTransform in vectorsToTransform)
@@ -110,56 +100,4 @@ public class TriangleTransformer
             yield return TransformVector(combinedRotationMatrix, centerVector, vectorToTransform);
         }
     }
-
-
-
-    // public MeshData2 BuildMesh(MeshData meshData)
-    // {
-    //     // var meshData = new MeshData();
-
-    //     // startVs before rotation
-    //     List<int> vIdxs = new();
-    //     meshData.AddVertex(startVertices[0], vIdxs);
-    //     meshData.AddVertex(startVertices[1], vIdxs);
-    //     meshData.AddVertex(startVertices[2], vIdxs);
-    //     meshData.AddTriangleIdxs(vIdxs[0], vIdxs[1], vIdxs[2]);
-
-
-    //     // startVs after rotation
-    //     RotateVectors(firstRotationMatrix, startVertices);
-    //     // RotateVectors(firstRotationMatrix, startVertices);
-
-    //     for (int i = 0; i < 3; i++)
-    //     {
-    //         Debug.Log($"After 1st rotation: start vertex #{i}: {startVertices[i]}");
-    //     }
-    //     vIdxs = new();
-    //     meshData.AddVertex(startVertices[0], vIdxs);
-    //     meshData.AddVertex(startVertices[1], vIdxs);
-    //     meshData.AddVertex(startVertices[2], vIdxs);
-    //     meshData.AddTriangleIdxs(vIdxs[0], vIdxs[1], vIdxs[2]);
-
-    //     TransformVectors(secondRotationMatrix, centerVector, startVertices);
-    //     // RotateVectors(secondRotationMatrix, startVertices);
-    //     // RotateVectors(firstRotationMatrix, startVertices);
-
-    //     for (int i = 0; i < 3; i++)
-    //     {
-    //         Debug.Log($"After 2nd rotation: start vertex #{i}: {startVertices[i]}");
-    //     }
-    //     vIdxs = new();
-    //     meshData.AddVertex(startVertices[0], vIdxs);
-    //     meshData.AddVertex(startVertices[1], vIdxs);
-    //     meshData.AddVertex(startVertices[2], vIdxs);
-    //     meshData.AddTriangleIdxs(vIdxs[0], vIdxs[1], vIdxs[2]);
-
-    //     // endVs, purposely unchanged
-    //     vIdxs = new();
-    //     meshData.AddVertex(endVertices[0], vIdxs);
-    //     meshData.AddVertex(endVertices[1], vIdxs);
-    //     meshData.AddVertex(endVertices[2], vIdxs);
-    //     meshData.AddTriangleIdxs(vIdxs[0], vIdxs[1], vIdxs[2]);
-
-    //     return meshData;
-    // }
 }
