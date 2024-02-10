@@ -36,7 +36,7 @@ public class PolygonCylinder
         Vector2[] poly1Vs = polygon.GetVertices(vertexRadius1);
         Vector2[] poly2Vs = polygon.GetVertices(vertexRadius2);
 
-        float[] angularUvs = polygon.angularUvs;
+        // float[] angularUvs = polygon.angularUvs;
 
         for (int i1 = 0; i1 < polygon.numSides; i1++)
         {
@@ -44,8 +44,8 @@ public class PolygonCylinder
             int i2 = (i1 + 1) % polygon.numSides;
 
             // set the uv data in the 2 dimensions (angular and z directions) to stretch the texture correctly
-            float angularUv1 = angularUvs[i1];
-            float angularUv2 = angularUvs[i2];
+            // float angularUv1 = angularUvs[i1];
+            // float angularUv2 = angularUvs[i2];
             float zUv1 = z1 / totLength;
             float zUv2 = z2 / totLength;
 

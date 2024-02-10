@@ -30,9 +30,20 @@ public class PolygonBounds
         return this.maxY - this.minY;
     }
 }
-public static class PolygonBoxBorder
+public class PolygonBoxBorder
 {
-    private static PolygonBounds GetPolygonBounds(Vector2[] polygonVertices)
+    public MeshData2 meshData;
+    public Vector3[] polygonVertices;
+    public PolygonBounds polygonBounds;
+
+    public PolygonBoxBorder(Vector3[] polygonVertices)
+    {
+        this.polygonVertices = polygonVertices;
+        polygonBounds = GetPolygonBounds(polygonVertices);
+        meshData = new MeshData2();
+        // AddMeshData(meshData, polygonVertices);
+    }
+    private static PolygonBounds GetPolygonBounds(Vector3[] polygonVertices)
     {
         float minX = float.MaxValue;
         float minY = float.MaxValue;
@@ -63,15 +74,16 @@ public static class PolygonBoxBorder
         return boundingSquareVertices;
     }
 
-    public static PolygonBounds AddMeshData(MeshData meshData, Vector2[] polygonVertices)
+    public void BuildMeshData()
     {
-        var polyBounds = GetPolygonBounds(polygonVertices);
-        var boundingVerts = GetBoundingSquare(polyBounds);
+
+        var boundingVerts = GetBoundingSquare(polygonBounds);
 
         var numSides = polygonVertices.Length;
         float quadIdxSize = numSides / 4f;
         for (int i1 = 0; i1 < numSides; i1++)
         {
+            // var runningIdx = i1 * numSides;
             var i2 = (i1 + 1) % numSides;
             var v1 = polygonVertices[i1];
             var v2 = polygonVertices[i2];
@@ -79,16 +91,19 @@ public static class PolygonBoxBorder
             int quad1 = (int)Mathf.Floor(i1 / quadIdxSize);
             int quad2 = (int)Mathf.Floor(i2 / quadIdxSize);
             var isAmbiguous2 = (i2 % quadIdxSize) == 0;
+
+
+            var meshDataStartCt = meshData.vertices.Count;
             if (isAmbiguous2 || quad1 == quad2)
             {
-                var vIdxs = new List<int>();
+                // var vIdxs = new List<int>();
                 var boundingVert = boundingVerts[quad1];
-                meshData.AddVertex(v1, vIdxs);
-                meshData.AddVertex(v2, vIdxs);
-                meshData.AddVertex(boundingVert, vIdxs);
-                meshData.AddTriangleIdxs(vIdxs[0], vIdxs[2], vIdxs[1]); // note the ORDER!
+                meshData.AddVertex(v1);
+                meshData.AddVertex(v2);
+                meshData.AddVertex(boundingVert);
+                meshData.AddTriangleIdxs(meshDataStartCt + 0, meshDataStartCt + 2, meshDataStartCt + 1); // note the ORDER!
             }
         }
-        return polyBounds;
+        // return polyBounds;
     }
 }

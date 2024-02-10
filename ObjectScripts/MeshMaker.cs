@@ -29,6 +29,7 @@ public class MeshMaker : MonoBehaviour
         drawer.DrawMesh(meshData, texture);
     }
 
+
     public void TestTransform()
     {
         float sqrt2 = Mathf.Sqrt(2);
@@ -65,29 +66,37 @@ public class MeshMaker : MonoBehaviour
         var meshData = t.BuildMesh(new MeshData());
         DrawMesh(meshData);
     }
-    public void MakeTriangleWithPolygonHole()
+    // public void MakeTriangleWithPolygonHole()
+    // {
+    //     float polySize = 1f;
+    //     Polygon p = new Polygon(numSides * 2);
+    //     var meshData = new MeshData();
+    //     var b = PolygonBoxBorder.AddMeshData(meshData, p.GetVertices(polySize));
+
+    //     var wt = new EquilateralTriangleWithRectHole(polySize * 10, b.GetHeight(), b.GetWidth());
+    //     wt.AddMeshData(meshData);
+
+    //     var origN = new Vector3(0, 0, 1);
+    //     var newN = new Vector3(1, 1, 1);
+    //     var t = new Transformer(origN, newN, new Vector3(100, 100, 100));
+    //     t.TransformMeshData(meshData, 0);
+
+    //     MeshDrawer drawer = FindObjectOfType<MeshDrawer>();
+    //     var texture = GetTexture();
+    //     drawer.DrawMesh(meshData, texture);
+    // }
+    public void ClearMesh()
     {
-        float polySize = 1f;
-        Polygon p = new Polygon(numSides * 2);
-        var meshData = new MeshData();
-        var b = PolygonBoxBorder.AddMeshData(meshData, p.GetVertices(polySize));
-
-        var wt = new EquilateralTriangleWithRectHole(polySize * 10, b.GetHeight(), b.GetWidth());
-        wt.AddMeshData(meshData);
-
-        var origN = new Vector3(0, 0, 1);
-        var newN = new Vector3(1, 1, 1);
-        var t = new Transformer(origN, newN, new Vector3(100, 100, 100));
-        t.TransformMeshData(meshData, 0);
-
+        Mesh meshData = new();
         MeshDrawer drawer = FindObjectOfType<MeshDrawer>();
         var texture = GetTexture();
         drawer.DrawMesh(meshData, texture);
+        Debug.Log("cleared");
     }
-
     public void MakeIco()
     {
-        var meshData = Icosahedron.BuildFunIco();
+        var ico = new Icosahedron();
+        var meshData = ico.BuildFunIco(numSides);
         MeshDrawer drawer = FindObjectOfType<MeshDrawer>();
         var texture = GetTexture();
         drawer.DrawMesh(meshData, texture);

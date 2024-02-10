@@ -5,93 +5,61 @@ using UnityEngine.WSA;
 
 public class WormholeTriangle
 {
+
+    public PolygonBoxBorder pb;
+    public EquilateralTriangleWithRectHole triangle;
     public static float sqrt3 = Mathf.Sqrt(3);
 
-    // public static void AddTriangleWithPolygonHoleToMesh(MeshData meshData, float sideLength
-    //     , Vector3[] triangleVerts, int polyNumSides, float polyVertexRadius)
-    // {
-    //     float vertexRadius = sideLength / sqrt3;
-    //     Polygon tri = new Polygon(3);
-    //     var startVertices = tri.GetVertices(vertexRadius);
-
-    //     Vector3[] startVertices3D = new Vector3[startVertices.Length];
-    //     for (int i = 0; i < startVertices.Length; i++)
-    //     {
-    //         // Convert each Vector2 to Vector3, setting the Z component to the specified value
-    //         startVertices3D[i] = new Vector3(startVertices[i].x, startVertices[i].y, 0);
-    //     }
-    //     TriangleTransformer tt = new TriangleTransformer(startVertices3D, triangleVerts);
-    //     // tt.TransformVectors(tt.combinedRotationMatrix, tt.centerVector * 2, startVertices3D);
-
-
-
-    // var startVertexCt = meshData.vertices.Count;
-    // var poly = new Polygon(polyNumSides);
-    // var b = PolygonBoxBorder.AddMeshData(meshData, poly.GetVertices(polyVertexRadius));
-
-    // float triangleVertexRadius = 2 * sideLength / Mathf.Sqrt(3);
-    // var triangle = new EquilateralTriangleWithRectHole(triangleVertexRadius,
-    //     b.GetHeight(), b.GetWidth());
-    // triangle.AddMeshData(meshData);
-
-    // var transformedVertices = tt.TransformVectors(tt.combinedRotationMatrix, tt.centerVector, meshData.vertices.Skip(startVertexCt).ToArray());
-    // for (int i = startVertexCt; i < meshData.vertices.Count; i++)
-    // {
-    //     meshData.vertices[i] = transformedVertices[i - startVertexCt];
-    // }
-    //     // 
-    //     // Vector3 edge1 = triangleVerts[1] - triangleVerts[2];
-    //     // // rotate the vertical edge of the new triangle to match this edge
-
-
-    //     // // Calculate the edges of the triangle
-
-    //     // Vector3 edge2 = triangleVerts[0] - triangleVerts[2];
-
-
-    //     // // Calculate the normal using the cross product of the edges
-    //     // Vector3 newNormal = Vector3.Cross(edge1, edge2).normalized;
-
-    //     // Vector3 center = triangleVerts[0] + triangleVerts[1] + triangleVerts[2] / 3;
-    //     // var origNormal = new Vector3(0, 0, 1);
-    //     // var t = new Transformer(origNormal, newNormal, center);
-    //     // t.TransformMeshData(meshData, startVertexCt);
-    // }
-
-    public static void AddTriangleWithPolygonHoleToMesh(MeshData meshData, float sideLength
+    public WormholeTriangle(float sideLength, Vector3[] triangleVerts, int polyNumSides, float polyVertexRadius)
+    {
+        AddTriangleWithPolygonHoleToMesh(sideLength, triangleVerts, polyNumSides, polyVertexRadius);
+        // pb = new PolygonBoxBorder(new Vector3[] { });
+        // triangle = new EquilateralTriangleWithRectHole(0, 0, 0);
+    }
+    private void AddTriangleWithPolygonHoleToMesh(float sideLength
     , Vector3[] triangleVerts, int polyNumSides, float polyVertexRadius)
     {
-        float vertexRadius = sideLength / sqrt3;
-        Polygon p = new Polygon(3);
-        var startVertices = p.GetVertices(vertexRadius);
+        // create the big equilateral triangle
+        float vertexRadius = sideLength / sqrt3; // applies to an equilateral triangle
+        var equilateralTriangle = new Polygon2(3);
+        var startVertices3D = equilateralTriangle.GetVertices(vertexRadius);
 
-        Vector3[] startVertices3D = new Vector3[startVertices.Length];
-        for (int i = 0; i < startVertices.Length; i++)
-        {
-            // Convert each Vector2 to Vector3, setting the Z component to the specified value
-            startVertices3D[i] = new Vector3(startVertices[i].x, startVertices[i].y, 0);
-        }
+        // Calculate the transformation from startVertices to endVertices
         TriangleTransformer tt = new TriangleTransformer(startVertices3D, triangleVerts);
-        tt.TransformVectors(tt.combinedRotationMatrix, tt.centerVector * 1f, startVertices3D);
 
+        // set the breakpoint for adding new vertices
+        // var startVertexCt = meshData.vertices.Count;
 
+        // calc the polygon border to turn it into a rect
+        // AND add it to the mesh (TODO: divide this up)
+        var poly = new Polygon2(polyNumSides);
+        pb = new PolygonBoxBorder(poly.GetVertices(polyVertexRadius));
+        // pb.BuildMeshData();
+        var b = pb.polygonBounds;
+        // var b = PolygonBoxBorder.AddMeshData(meshData, poly.GetVertices(polyVertexRadius));
 
-        var startVertexCt = meshData.vertices.Count;
-        var poly = new Polygon(polyNumSides);
-        var b = PolygonBoxBorder.AddMeshData(meshData, poly.GetVertices(polyVertexRadius));
-
-        // float triangleVertexRadius = 2 * sideLength / Mathf.Sqrt(3);
-        var triangle = new EquilateralTriangleWithRectHole(vertexRadius,
+        // calc the triangles to go around the polyBoxBorder
+        triangle = new EquilateralTriangleWithRectHole(vertexRadius,
             b.GetHeight(), b.GetWidth());
-        triangle.AddMeshData(meshData);
 
-        var transformedVertices = tt.TransformVectors(tt.combinedRotationMatrix, tt.centerVector, meshData.vertices.Skip(startVertexCt).ToArray());
-        for (int i = startVertexCt; i < meshData.vertices.Count; i++)
-        {
-            meshData.vertices[i] = transformedVertices[i - startVertexCt];
-        }
+        // add the triangles to the mesh
+        // triangle.AddMeshData(meshData);
 
-        List<int> vIdxs = new();
+        pb.BuildMeshData();
+        triangle.BuildMeshData();
+        pb.meshData.vertices = tt.TransformVectors(
+            tt.combinedRotationMatrix, tt.centerVector, pb.meshData.vertices).ToList();
+        triangle.meshData.vertices = tt.TransformVectors(
+            tt.combinedRotationMatrix, tt.centerVector, triangle.meshData.vertices).ToList();
+        // var mesh = MeshData2.CreateMesh(pb.meshData, triangle.meshData);
+        // transform ALL the vertices we've added since setting the breakpoint
+        // var transformedVertices = tt.TransformVectors(tt.combinedRotationMatrix, tt.centerVector, meshData.vertices.Skip(startVertexCt).ToArray());
+        // for (int i = startVertexCt; i < meshData.vertices.Count; i++)
+        // {
+        //     meshData.vertices[i] = transformedVertices[i - startVertexCt];
+        // }
+
+        // List<int> vIdxs = new();
         // for (int i = 0; i < triangleVerts.Length; i++)
         // {
         //     meshData.AddVertex(triangleVerts[i], vIdxs);

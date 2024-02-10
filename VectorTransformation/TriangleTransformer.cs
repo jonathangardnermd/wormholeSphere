@@ -127,15 +127,22 @@ public class TriangleTransformer
 
     }
 
-    public Vector3[] TransformVectors(Matrix4x4 rotationMatrix, Vector3 translationV, Vector3[] vectorsToTransform)
-    {
-        for (int i = 0; i < vectorsToTransform.Length; i++)
-        {
-            vectorsToTransform[i] = TransformVector(rotationMatrix, translationV, vectorsToTransform[i]);
-        }
-        return vectorsToTransform;
-        // return rotationMatrix.MultiplyPoint(vectorToRotate);
+    // public Vector3[] TransformVectors(Matrix4x4 rotationMatrix, Vector3 translationV, Vector3[] vectorsToTransform)
+    // {
+    //     for (int i = 0; i < vectorsToTransform.Length; i++)
+    //     {
+    //         vectorsToTransform[i] = TransformVector(rotationMatrix, translationV, vectorsToTransform[i]);
+    //     }
+    //     return vectorsToTransform;
+    //     // return rotationMatrix.MultiplyPoint(vectorToRotate);
 
+    // }
+    public IEnumerable<Vector3> TransformVectors(Matrix4x4 rotationMatrix, Vector3 translationV, IEnumerable<Vector3> vectorsToTransform)
+    {
+        foreach (Vector3 vectorToTransform in vectorsToTransform)
+        {
+            yield return TransformVector(rotationMatrix, translationV, vectorToTransform);
+        }
     }
 
     public Vector3 TransformVector(Matrix4x4 rotationMatrix, Vector3 translationV, Vector3 vectorToTransform)

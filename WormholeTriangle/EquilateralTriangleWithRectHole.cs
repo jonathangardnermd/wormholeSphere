@@ -10,9 +10,11 @@ public class EquilateralTriangleWithRectHole
     public float halfRectHeight;
     public float halfRectWidth;
     public Vector2[] triangleVertices;
+    public MeshData2 meshData;
 
     public EquilateralTriangleWithRectHole(float vertexRadius, float rectHeight, float rectWidth)
     {
+        meshData = new();
         this.vertexRadius = vertexRadius;
         this.halfRectHeight = rectHeight / 2f;
         this.halfRectWidth = rectWidth / 2f;
@@ -21,35 +23,35 @@ public class EquilateralTriangleWithRectHole
         triangleVertices = polygon.GetVertices(vertexRadius);
     }
 
-    public MeshData AddMeshData(MeshData meshData)
+    public void BuildMeshData()
     {
         var deltaX1 = vertexRadius - halfRectWidth; // change in x from the (r,0) triangle vertex to the right side of rect hole
         var deltaX2 = vertexRadius + halfRectWidth; // ... to the LEFT side of rect hole
         var deltaY1 = slope * deltaX1; // change in y from (r,0) to the right side of the rect hole
         var deltaY2 = slope * deltaX2; // ... to the LEFT side of the rect hole
 
-        List<int> newIdxs = new();
-        meshData.AddVertex(triangleVertices[0], newIdxs); // 0
-        meshData.AddVertex(triangleVertices[1], newIdxs); // 1
-        meshData.AddVertex(triangleVertices[2], newIdxs);// 2
-        meshData.AddVertex(new Vector2(halfRectWidth, deltaY1), newIdxs); // 3
-        meshData.AddVertex(new Vector2(halfRectWidth, -deltaY1), newIdxs); // 4
-        meshData.AddVertex(new Vector2(-halfRectWidth, deltaY2), newIdxs); // 5
-        meshData.AddVertex(new Vector2(-halfRectWidth, -deltaY2), newIdxs); // 6
-        meshData.AddVertex(new Vector2(halfRectWidth, halfRectHeight), newIdxs); // 7
-        meshData.AddVertex(new Vector2(-halfRectWidth, halfRectHeight), newIdxs); // 8
-        meshData.AddVertex(new Vector2(-halfRectWidth, -halfRectHeight), newIdxs); // 9
-        meshData.AddVertex(new Vector2(halfRectWidth, -halfRectHeight), newIdxs); // 10
+        // List<int> newIdxs = new();
+        meshData.AddVertex(triangleVertices[0]); // 0
+        meshData.AddVertex(triangleVertices[1]); // 1
+        meshData.AddVertex(triangleVertices[2]);// 2
+        meshData.AddVertex(new Vector2(halfRectWidth, deltaY1)); // 3
+        meshData.AddVertex(new Vector2(halfRectWidth, -deltaY1)); // 4
+        meshData.AddVertex(new Vector2(-halfRectWidth, deltaY2)); // 5
+        meshData.AddVertex(new Vector2(-halfRectWidth, -deltaY2)); // 6
+        meshData.AddVertex(new Vector2(halfRectWidth, halfRectHeight)); // 7
+        meshData.AddVertex(new Vector2(-halfRectWidth, halfRectHeight)); // 8
+        meshData.AddVertex(new Vector2(-halfRectWidth, -halfRectHeight)); // 9
+        meshData.AddVertex(new Vector2(halfRectWidth, -halfRectHeight)); // 10
 
-        meshData.AddTriangleIdxs(newIdxs[0], newIdxs[3], newIdxs[4]);
-        meshData.AddTriangleIdxs(newIdxs[7], newIdxs[3], newIdxs[5]);
-        meshData.AddTriangleIdxs(newIdxs[5], newIdxs[8], newIdxs[7]);
-        meshData.AddTriangleIdxs(newIdxs[10], newIdxs[6], newIdxs[4]);
-        meshData.AddTriangleIdxs(newIdxs[10], newIdxs[9], newIdxs[6]);
-        meshData.AddTriangleIdxs(newIdxs[6], newIdxs[5], newIdxs[1]);
-        meshData.AddTriangleIdxs(newIdxs[1], newIdxs[2], newIdxs[6]);
-        meshData.AddTriangleIdxs(newIdxs[0], newIdxs[3], newIdxs[4]);
-        return meshData;
+        meshData.AddTriangleIdxs(0, 3, 4);
+        meshData.AddTriangleIdxs(7, 3, 5);
+        meshData.AddTriangleIdxs(5, 8, 7);
+        meshData.AddTriangleIdxs(10, 6, 4);
+        meshData.AddTriangleIdxs(10, 9, 6);
+        meshData.AddTriangleIdxs(6, 5, 1);
+        meshData.AddTriangleIdxs(1, 2, 6);
+        meshData.AddTriangleIdxs(0, 3, 4);
+        // return meshData;
     }
 
 }

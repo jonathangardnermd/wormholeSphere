@@ -20,5 +20,9 @@ public class EditorForMeshMaker : Editor
         {
             maker.MakeMesh();
         }
+        if (GUILayout.Button("Clear Mesh"))
+        {
+            maker.ClearMesh();
+        }
     }
 }
