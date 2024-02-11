@@ -6,8 +6,8 @@ using System.Linq;
 
 public class Icosahedron
 {
-    public static readonly float SIZE_FACTOR = 100;
-    public float SIDE_LENGTH = 0;
+    // public static readonly float SIZE_FACTOR = 100;
+    public float SideLength;
 
     public static int[][] icoTriangleIdxs = new int[][]
                 {
@@ -51,39 +51,23 @@ public class Icosahedron
         new Vector3(-t, 0, 1).normalized
     };
 
-    public void Init()
+    public Icosahedron(float sizeFactor)
+    {
+        Init(sizeFactor);
+    }
+
+    public void Init(float sizeFactor)
     {
         for (int i = 0; i < vertices.Count; i++)
         {
-            vertices[i] *= SIZE_FACTOR;
+            vertices[i] *= sizeFactor;
         }
         // set side length
         var tIdxs = icoTriangleIdxs[0];
         var v1 = vertices[tIdxs[0]];
         var v2 = vertices[tIdxs[1]];
-        SIDE_LENGTH = Vector3.Distance(v1, v2);
+        SideLength = Vector3.Distance(v1, v2);
     }
 
-    public Mesh BuildFunIco(int numSides)
-    {
-        Init();
-        List<WormholeTriangle> ts = new();
-        for (int i = 0; i < icoTriangleIdxs.Length; i++)
-        {
-            var triVertIdxs = icoTriangleIdxs[i];
-            Vector3[] triVerts = new Vector3[3];
-            for (int j = 0; j < 3; j++)
-            {
-                triVerts[j] = vertices[triVertIdxs[j]];
-            }
-            var wt = new WormholeTriangle(SIDE_LENGTH, triVerts, numSides * 2, 10f, 1f, 10f);
-            wt.BuildMeshData();
-            ts.Add(wt);
-        }
 
-        IEnumerable<MeshData> meshDataList = ts
-            .SelectMany(wt => wt.GetMeshes());
-        var mesh = MeshData.CreateMesh(meshDataList);
-        return mesh;
-    }
 }

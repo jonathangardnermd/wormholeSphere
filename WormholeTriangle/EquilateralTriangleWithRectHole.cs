@@ -43,14 +43,28 @@ public class EquilateralTriangleWithRectHole
         meshData.AddVertex(new Vector2(-halfRectWidth, -halfRectHeight)); // 9
         meshData.AddVertex(new Vector2(halfRectWidth, -halfRectHeight)); // 10
 
-        meshData.AddTriangleIdxsReverseNormal(0, 3, 4);
-        meshData.AddTriangleIdxsReverseNormal(7, 3, 5);
-        meshData.AddTriangleIdxsReverseNormal(5, 8, 7);
-        meshData.AddTriangleIdxsReverseNormal(10, 6, 4);
-        meshData.AddTriangleIdxsReverseNormal(10, 9, 6);
-        meshData.AddTriangleIdxsReverseNormal(6, 5, 1);
-        meshData.AddTriangleIdxsReverseNormal(1, 2, 6);
-        meshData.AddTriangleIdxsReverseNormal(0, 3, 4);
+        // avoid re-using vertices so that the normals are calculated correctly
+        meshData.AddVertex(new Vector2(halfRectWidth, deltaY1)); // 11 same as 3
+        meshData.AddVertex(new Vector2(halfRectWidth, deltaY1)); // 12 same as 3
+        meshData.AddVertex(new Vector2(halfRectWidth, -deltaY1)); // 13 same as 4
+        meshData.AddVertex(new Vector2(halfRectWidth, -deltaY1)); // 14 same as 4
+        meshData.AddVertex(new Vector2(-halfRectWidth, deltaY2)); // 15 same as 5
+        meshData.AddVertex(new Vector2(-halfRectWidth, deltaY2)); // 16 same as 5
+        meshData.AddVertex(new Vector2(-halfRectWidth, -deltaY2)); // 17 same as 6 
+        meshData.AddVertex(new Vector2(-halfRectWidth, -deltaY2)); // 18 same as 6
+        meshData.AddVertex(new Vector2(-halfRectWidth, -deltaY2)); // 19 same as 6
+        meshData.AddVertex(new Vector2(halfRectWidth, -halfRectHeight)); // 20 same as 10
+        meshData.AddVertex(triangleVertices[0]); // 21 same as 0
+        meshData.AddVertex(triangleVertices[1]); // 22 same as 1
+
+        meshData.AddTriangleIdxsReverseNormal(3, 0, 4);
+        meshData.AddTriangleIdxsReverseNormal(7, 11, 5);
+        meshData.AddTriangleIdxsReverseNormal(15, 8, 7);
+        meshData.AddTriangleIdxsReverseNormal(10, 6, 13);
+        meshData.AddTriangleIdxsReverseNormal(20, 9, 17);
+        meshData.AddTriangleIdxsReverseNormal(18, 16, 1);
+        meshData.AddTriangleIdxsReverseNormal(22, 2, 19);
+        meshData.AddTriangleIdxsReverseNormal(21, 12, 14);
         // return meshData;
     }
 

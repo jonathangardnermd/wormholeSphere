@@ -60,6 +60,7 @@ public class PolygonBoxBorder
 
         return new PolygonBounds(minX, minY, maxX, maxY);
     }
+
     private static Vector2[] GetBoundingSquare(PolygonBounds polyBounds)
     {
         var boundingSquareVertices = new Vector2[4];
