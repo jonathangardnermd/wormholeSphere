@@ -112,20 +112,20 @@ public class SplayData
         return totChangeInU / sqrt2;
     }
 
-    public void SaveToCSV(string filePath)
-    {
-        // save the uv and xy points we've found for the curve to a file
-        System.Text.StringBuilder csvContent = new System.Text.StringBuilder();
-        csvContent.AppendLine("uChange,vChange,xChange,yChange");
-        for (int i = 0; i < uvChanges.Count; i++)
-        {
-            var line = string.Format("{0},{1},{2},{3}",
-                uvChanges[i].x,
-                uvChanges[i].y,
-                xyChanges[i].x,
-                xyChanges[i].y);
-            csvContent.AppendLine(line);
-        }
-        File.WriteAllText(filePath, csvContent.ToString());
-    }
+    // public void SaveToCSV(string filePath)
+    // {
+    //     // save the uv and xy points we've found for the curve to a file
+    //     System.Text.StringBuilder csvContent = new System.Text.StringBuilder();
+    //     csvContent.AppendLine("uChange,vChange,xChange,yChange");
+    //     for (int i = 0; i < uvChanges.Count; i++)
+    //     {
+    //         var line = string.Format("{0},{1},{2},{3}",
+    //             uvChanges[i].x,
+    //             uvChanges[i].y,
+    //             xyChanges[i].x,
+    //             xyChanges[i].y);
+    //         csvContent.AppendLine(line);
+    //     }
+    //     File.WriteAllText(filePath, csvContent.ToString());
+    // }
 }

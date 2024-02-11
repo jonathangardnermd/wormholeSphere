@@ -6,7 +6,7 @@ using System.Linq;
 
 public class Icosahedron
 {
-    public static readonly float SIZE_FACTOR = 30;
+    public static readonly float SIZE_FACTOR = 100;
     public float SIDE_LENGTH = 0;
 
     public static int[][] icoTriangleIdxs = new int[][]
@@ -76,13 +76,13 @@ public class Icosahedron
             {
                 triVerts[j] = vertices[triVertIdxs[j]];
             }
-            var wt = new WormholeTriangle(SIDE_LENGTH, triVerts, numSides * 2, 1f);
+            var wt = new WormholeTriangle(SIDE_LENGTH, triVerts, numSides * 2, 10f, 1f, 10f);
             wt.BuildMeshData();
             ts.Add(wt);
         }
 
         IEnumerable<MeshData> meshDataList = ts
-            .SelectMany(wt => new[] { wt.pb.meshData, wt.triangle.meshData });
+            .SelectMany(wt => wt.GetMeshes());
         var mesh = MeshData.CreateMesh(meshDataList);
         return mesh;
     }

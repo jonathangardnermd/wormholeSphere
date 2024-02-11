@@ -6,26 +6,35 @@ public class PolygonCylinder
     public int numSides;
     public float length;
     public float polygonVertexRadius;
+    public float zEnd;
 
     public Polygon polygon;
 
-    public PolygonCylinder(int numSides, float length, float polygonVertexRadius)
+    public MeshData meshData;
+
+    public PolygonCylinder(int numSides, float length, float polygonVertexRadius, float zEnd)
     {
+        meshData = new();
         this.numSides = numSides;
         this.length = length;
         this.polygonVertexRadius = polygonVertexRadius;
+        this.zEnd = zEnd;
     }
 
+    public void BuildMeshData()
+    {
+        AddPolygonCylinderToMesh(meshData);
+    }
     /*
     This function will create the sides of the cylinder by "stacking" two polygons: 
     one at z=-length and the other at z=0.
     */
-    public void AddPolygonCylinderToMesh(MeshData meshData)
+    private void AddPolygonCylinderToMesh(MeshData meshData)
     {
         polygon = new Polygon(numSides); // calculate the vertices of a unit regular polygon with the specified number of sides
 
         // "stacking" the polygons creates the triangles and vertices to connect them, forming the sides of the cylinder
-        StackPolygons(meshData, polygon, length, polygonVertexRadius, polygonVertexRadius, -length, 0);
+        StackPolygons(meshData, polygon, length, polygonVertexRadius, polygonVertexRadius, zEnd - length, zEnd + 0);
     }
 
     public static void StackPolygons(MeshData meshData, Polygon polygon, float totLength, float vertexRadius1, float vertexRadius2, float z1, float z2)
