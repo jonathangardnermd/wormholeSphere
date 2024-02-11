@@ -43,14 +43,14 @@ public class EquilateralTriangleWithRectHole
         meshData.AddVertex(new Vector2(-halfRectWidth, -halfRectHeight)); // 9
         meshData.AddVertex(new Vector2(halfRectWidth, -halfRectHeight)); // 10
 
-        meshData.AddTriangleIdxs(0, 3, 4);
-        meshData.AddTriangleIdxs(7, 3, 5);
-        meshData.AddTriangleIdxs(5, 8, 7);
-        meshData.AddTriangleIdxs(10, 6, 4);
-        meshData.AddTriangleIdxs(10, 9, 6);
-        meshData.AddTriangleIdxs(6, 5, 1);
-        meshData.AddTriangleIdxs(1, 2, 6);
-        meshData.AddTriangleIdxs(0, 3, 4);
+        meshData.AddTriangleIdxsReverseNormal(0, 3, 4);
+        meshData.AddTriangleIdxsReverseNormal(7, 3, 5);
+        meshData.AddTriangleIdxsReverseNormal(5, 8, 7);
+        meshData.AddTriangleIdxsReverseNormal(10, 6, 4);
+        meshData.AddTriangleIdxsReverseNormal(10, 9, 6);
+        meshData.AddTriangleIdxsReverseNormal(6, 5, 1);
+        meshData.AddTriangleIdxsReverseNormal(1, 2, 6);
+        meshData.AddTriangleIdxsReverseNormal(0, 3, 4);
         // return meshData;
     }
 

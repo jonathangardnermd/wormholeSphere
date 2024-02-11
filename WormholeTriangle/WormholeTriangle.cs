@@ -37,7 +37,7 @@ public class WormholeTriangle
         triangle = new EquilateralTriangleWithRectHole(vertexRadius,
             b.GetHeight(), b.GetWidth());
 
-        var zEnd = -splayLength;
+        var zEnd = splayLength;
         cylinder = new PolygonCylinder(polyNumSides, baseCylinderLength, baseCylinderRadius, zEnd);
         var splayData = new SplayData(polyNumSides, splayLength * sqrt2);
         splay = new PolygonalCylinderSplay(poly, baseCylinderRadius, splayData, zEnd);

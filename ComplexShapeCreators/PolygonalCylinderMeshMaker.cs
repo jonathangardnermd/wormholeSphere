@@ -34,7 +34,7 @@ public class PolygonCylinder
         polygon = new Polygon(numSides); // calculate the vertices of a unit regular polygon with the specified number of sides
 
         // "stacking" the polygons creates the triangles and vertices to connect them, forming the sides of the cylinder
-        StackPolygons(meshData, polygon, length, polygonVertexRadius, polygonVertexRadius, zEnd - length, zEnd + 0);
+        StackPolygons(meshData, polygon, length, polygonVertexRadius, polygonVertexRadius, zEnd + length, zEnd + 0);
     }
 
     public static void StackPolygons(MeshData meshData, Polygon polygon, float totLength, float vertexRadius1, float vertexRadius2, float z1, float z2)
@@ -62,13 +62,13 @@ public class PolygonCylinder
             meshData.AddVertex(new Vector3(poly1Vs[i2].x, poly1Vs[i2].y, z1));
             meshData.AddVertex(new Vector3(poly1Vs[i1].x, poly1Vs[i1].y, z1));
             meshData.AddVertex(new Vector3(poly2Vs[i1].x, poly2Vs[i1].y, z2));
-            meshData.AddTriangleIdxs(startIdx + 0, startIdx + 1, startIdx + 2);
+            meshData.AddTriangleIdxsReverseNormal(startIdx + 0, startIdx + 1, startIdx + 2);
 
             // add the second triangle of the quad
             meshData.AddVertex(new Vector3(poly2Vs[i2].x, poly2Vs[i2].y, z2));
             meshData.AddVertex(new Vector3(poly1Vs[i2].x, poly1Vs[i2].y, z1));
             meshData.AddVertex(new Vector3(poly2Vs[i1].x, poly2Vs[i1].y, z2));
-            meshData.AddTriangleIdxs(startIdx + 3, startIdx + 4, startIdx + 5);
+            meshData.AddTriangleIdxsReverseNormal(startIdx + 3, startIdx + 4, startIdx + 5);
         }
     }
 }

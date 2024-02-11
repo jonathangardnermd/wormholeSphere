@@ -46,7 +46,7 @@ public class PolygonalCylinderSplay
             // therefore, the radius at the end of this splayLevel is equal to splayPt.x plus the radius at the end of the cylinder (baseVertexRadius)
             nextVertexRadius = baseVertexRadius + splayPt.x;
             // and the nextZ coord is splayPt.y plus the z coordinate at the end of the cylinder (which is 0)
-            var nextZ = splayPt.y + zEnd;
+            var nextZ = zEnd - splayPt.y;
 
             // generate the vertices and triangles for the mesh between these two polygons of different radii and different z-coords
             PolygonCylinder.StackPolygons(meshData, polygon, totSplayLength, prevVertexRadius, nextVertexRadius, prevZ, nextZ);

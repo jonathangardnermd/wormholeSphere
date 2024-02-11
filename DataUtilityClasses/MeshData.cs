@@ -18,12 +18,19 @@ public class MeshData
         vertices.Add(v);
     }
 
-    public void AddTriangleIdxs(int i1, int i2, int i3)
+    public void AddTriangleIdxsReverseNormal(int i1, int i2, int i3)
     {
-        triangleIdxs.Add(i1);
         triangleIdxs.Add(i2);
+        triangleIdxs.Add(i1);
         triangleIdxs.Add(i3);
     }
+
+    // public void AddTriangleIdxsReverseNormal(int i1, int i2, int i3)
+    // {
+    //     triangleIdxs.Add(i2);
+    //     triangleIdxs.Add(i1);
+    //     triangleIdxs.Add(i3);
+    // }
 
     public static Mesh CreateMesh(IEnumerable<MeshData> meshDatas)
     {

@@ -95,7 +95,7 @@ public class PolygonBoxBorder
                 meshData.AddVertex(v1);
                 meshData.AddVertex(v2);
                 meshData.AddVertex(boundingVert);
-                meshData.AddTriangleIdxs(meshDataStartCt + 0, meshDataStartCt + 2, meshDataStartCt + 1); // note the ORDER!
+                meshData.AddTriangleIdxsReverseNormal(meshDataStartCt + 0, meshDataStartCt + 2, meshDataStartCt + 1); // note the ORDER!
             }
         }
     }
