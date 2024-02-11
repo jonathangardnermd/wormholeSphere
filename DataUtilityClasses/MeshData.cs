@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using System;
+// using System;
+
 public class MeshData
 {
     public List<Vector3> vertices;
@@ -24,13 +25,6 @@ public class MeshData
         triangleIdxs.Add(i1);
         triangleIdxs.Add(i3);
     }
-
-    // public void AddTriangleIdxsReverseNormal(int i1, int i2, int i3)
-    // {
-    //     triangleIdxs.Add(i2);
-    //     triangleIdxs.Add(i1);
-    //     triangleIdxs.Add(i3);
-    // }
 
     public static Mesh CreateMesh(IEnumerable<MeshData> meshDatas)
     {

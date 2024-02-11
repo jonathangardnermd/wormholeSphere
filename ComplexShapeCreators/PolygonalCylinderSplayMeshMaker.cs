@@ -1,6 +1,5 @@
-using UnityEngine;
-using System.IO;
-// using UnityEngine.UIElements;
+// using UnityEngine;
+// using System.IO;
 
 
 public class PolygonalCylinderSplay
@@ -21,17 +20,12 @@ public class PolygonalCylinderSplay
     }
 
     /* 
-        This function will form the splay at the end of the cylinder, starting at z=0 and splaying into z>0.
-        The splay will be formed by stacking polygons of increasing radii as z grows larger, and the 
-        specific radii and z coords chosen will come from the "splayData", which calculates the radii
-        and z coords so that the splay is parabolic.
+    This function will form the splay at the end of the cylinder, starting at z=0 and splaying into z>0.
+    The splay will be formed by stacking polygons of increasing radii as z grows larger, and the 
+    specific radii and z coords chosen will come from the "splayData", which calculates the radii
+    and z coords so that the splay is parabolic.
     */
-
     public void BuildMeshData()
-    {
-        AddPolygonalCylinderSplayToMesh();
-    }
-    private void AddPolygonalCylinderSplayToMesh()
     {
         var prevVertexRadius = baseVertexRadius; // initialize the radius of the "previous" polygon to be the radius of the cylinder.
         var prevZ = zEnd; // the original cylinder goes from z=-length to z=0, so the splay will start at z=0 and splay into z>0
@@ -45,6 +39,7 @@ public class PolygonalCylinderSplay
             // the splay pts contain the total x and y changes from the end of cylinder to the end of the "splayLevel"
             // therefore, the radius at the end of this splayLevel is equal to splayPt.x plus the radius at the end of the cylinder (baseVertexRadius)
             nextVertexRadius = baseVertexRadius + splayPt.x;
+
             // and the nextZ coord is splayPt.y plus the z coordinate at the end of the cylinder (which is 0)
             var nextZ = zEnd - splayPt.y;
 
@@ -55,18 +50,7 @@ public class PolygonalCylinderSplay
             prevVertexRadius = nextVertexRadius;
             prevZ = nextZ;
         }
-
-        // "stack" one more polygon at the same z coord as the last one in order to form the "plane".
-        // int planeSizeFactor = 10;
-        // PolygonCylinder.StackPolygons(meshData, polygon, totSplayLength, nextVertexRadius, nextVertexRadius * planeSizeFactor, prevZ, prevZ);
     }
-
-    // private void SaveToCSV(string triangleStr, string filePath)
-    // {
-    //     System.Text.StringBuilder csvContent = new System.Text.StringBuilder();
-    //     csvContent.AppendLine(triangleStr);
-    //     File.WriteAllText(filePath, csvContent.ToString());
-    // }
 }
 
 

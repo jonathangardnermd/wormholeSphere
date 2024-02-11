@@ -1,12 +1,10 @@
-using System.Collections;
+// using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
-
+// using System.Linq;
 
 public class Icosahedron
 {
-    // public static readonly float SIZE_FACTOR = 100;
     public float SideLength;
 
     public static int[][] icoTriangleIdxs = new int[][]

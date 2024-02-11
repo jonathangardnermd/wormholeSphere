@@ -1,8 +1,9 @@
 
-using System.Collections.Generic;
+// using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
+// using System.Linq;
 // using Math;
+
 public class EquilateralTriangleWithRectHole
 {
     public static float slope = 1 / Mathf.Sqrt(3); // slope of the outer equilateral triangle from the first vertex (at <r,0>) to the second vertex (rotated 120 degrees counterclockwise from <r,0>)
@@ -65,7 +66,6 @@ public class EquilateralTriangleWithRectHole
         meshData.AddTriangleIdxsReverseNormal(18, 16, 1);
         meshData.AddTriangleIdxsReverseNormal(22, 2, 19);
         meshData.AddTriangleIdxsReverseNormal(21, 12, 14);
-        // return meshData;
     }
 
 }

@@ -8,10 +8,10 @@ public class MeshMaker : MonoBehaviour
     public bool autoUpdate = false;
 
 
-    [Range(2, 30)]
+    [Range(2, 11)]
     public int halfNumSides = 3; // the numSides in the polygon (e.g. 6 means the cross-section is hexagonal)
 
-    [Range(10, 100)]
+    [Range(10, 500)]
     public float sphereSizeFactor = 100;
 
     [Range(10, 500)]
@@ -19,32 +19,32 @@ public class MeshMaker : MonoBehaviour
 
     public void MakeMesh()
     {
-        // Config.debugModeEnabled = debugModeEnabled;
-        MakeIco();
+        MakeWormholeSphereMesh();
+    }
+
+    public void DrawMesh(Mesh mesh)
+    {
+        MeshDrawer drawer = FindObjectOfType<MeshDrawer>();
+        var texture = GetTexture();
+        drawer.DrawMesh(mesh, texture);
+        Debug.Log("cleared");
     }
     public void ClearMesh()
     {
-        Mesh meshData = new();
-        MeshDrawer drawer = FindObjectOfType<MeshDrawer>();
-        var texture = GetTexture();
-        drawer.DrawMesh(meshData, texture);
+        Mesh emptyMesh = new();
+        DrawMesh(emptyMesh);
         Debug.Log("cleared");
     }
-    public void MakeIco()
+    public void MakeWormholeSphereMesh()
     {
-        // var ico = new Icosahedron();
-        var meshData = BuildWormholeSphereMesh();
-        MeshDrawer drawer = FindObjectOfType<MeshDrawer>();
-        var texture = GetTexture();
-        drawer.DrawMesh(meshData, texture);
+        var mesh = BuildWormholeSphereMesh();
+        DrawMesh(mesh);
         Debug.Log("done");
     }
 
     public Mesh BuildWormholeSphereMesh()
     {
-        // Init();
         var ico = new Icosahedron(sphereSizeFactor);
-        // var meshData = ico.BuildFunIco(halfNumSides * 2, sphereSizeFactor);
         List<WormholeTriangle> ts = new();
         for (int i = 0; i < Icosahedron.icoTriangleIdxs.Length; i++)
         {

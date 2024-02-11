@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Linq;
-using System.Collections.Generic;
+// using System.Collections.Generic;
 // using Math;
+
 public class Polygon
 {
     public readonly int numSides;

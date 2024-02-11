@@ -1,7 +1,6 @@
-using System.Collections.Generic;
+// using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-// using UnityEngine.WSA;
 
 public class WormholeTriangle
 {
@@ -15,9 +14,7 @@ public class WormholeTriangle
 
     public WormholeTriangle(float sideLength, Vector3[] triangleVerts, int polyNumSides, float baseCylinderLength, float baseCylinderRadius, float splayLength)
     {
-
         Init(sideLength, triangleVerts, polyNumSides, baseCylinderLength, baseCylinderRadius, splayLength);
-        // BuildMeshData();
     }
     private void Init(float sideLength
     , Vector3[] triangleVerts, int polyNumSides, float baseCylinderLength, float baseCylinderRadius, float splayLength)

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
+// using System.Linq;
 using UnityEngine;
 
 public class TriangleTransformer
@@ -17,18 +17,12 @@ public class TriangleTransformer
         Vector3 startNormal = CalcUnitNormal(startVertices);
         Vector3 endNormal = CalcUnitNormal(endVertices);
 
-        // Debug.Log($"Start Normal: {startNormal}");
-        // Debug.Log($"End Normal: {endNormal}");
-
         Vector3 rotationAxis = Vector3.Cross(startNormal, endNormal).normalized;
 
         float rotationAngle = Mathf.Acos(Vector3.Dot(startNormal, endNormal));
 
         Quaternion firstRotationQuaternion = Quaternion.AngleAxis(rotationAngle * Mathf.Rad2Deg, rotationAxis);
         firstRotationMatrix = Matrix4x4.Rotate(firstRotationQuaternion);
-
-        // Debug.Log($"Rotation Axis: {rotationAxis}");
-        // Debug.Log($"Rotation Angle: {rotationAngle}");
 
         centerVector = CalcCenter();
 
@@ -51,13 +45,6 @@ public class TriangleTransformer
         Quaternion secondRotationQuaternion = Quaternion.AngleAxis(secondRotationAngle * Mathf.Rad2Deg, secondRotationAxis);
         secondRotationMatrix = Matrix4x4.Rotate(secondRotationQuaternion);
         this.combinedRotationMatrix = Matrix4x4.Rotate(secondRotationQuaternion * firstRotationQuaternion);
-
-        // Debug.Log($"Start First V: {startFirstV}");
-        // Debug.Log($"End First V: {endFirstV}");
-        // Debug.Log($"centerVector: {centerVector}");
-        // Debug.Log($"Second Rotation Axis: {secondRotationAxis}");
-        // Debug.Log($"Partially Rotated Start First Edge: {partiallyRotatedStartFirstV}");
-        // Debug.Log($"Second Rotation Angle: {secondRotationAngle}");
     }
     private Vector3 CalcCenter()
     {

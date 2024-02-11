@@ -25,6 +25,7 @@ public class PolygonCylinder
     {
         AddPolygonCylinderToMesh(meshData);
     }
+
     /*
     This function will create the sides of the cylinder by "stacking" two polygons: 
     one at z=-length and the other at z=0.
@@ -43,18 +44,10 @@ public class PolygonCylinder
         Vector3[] poly1Vs = polygon.GetVertices(vertexRadius1);
         Vector3[] poly2Vs = polygon.GetVertices(vertexRadius2);
 
-        // float[] angularUvs = polygon.angularUvs;
-
         for (int i1 = 0; i1 < polygon.numSides; i1++)
         {
             // add the vertices and triangles that form the quad between poly1's i1 and i2 vertices and poly2's i1 and i2 vertices
             int i2 = (i1 + 1) % polygon.numSides;
-
-            // set the uv data in the 2 dimensions (angular and z directions) to stretch the texture correctly
-            // float angularUv1 = angularUvs[i1];
-            // float angularUv2 = angularUvs[i2];
-            // float zUv1 = z1 / totLength;
-            // float zUv2 = z2 / totLength;
 
             var startIdx = meshData.vertices.Count;
             List<int> vIdxs = new();

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using System.IO;
+// using System.IO;
 
 // we assume the curve (aka "splay") from the cylinder's vertical slope to the plane's horizontal slope (a 90-degree difference)
 // is the simplest possible curve with a CONSTANT rate of change in the derivative (i.e. a parabola)
@@ -111,21 +111,4 @@ public class SplayData
         // therefore, totChangeInY = totChangeInX = totChangeInU / sqrt(2)
         return totChangeInU / sqrt2;
     }
-
-    // public void SaveToCSV(string filePath)
-    // {
-    //     // save the uv and xy points we've found for the curve to a file
-    //     System.Text.StringBuilder csvContent = new System.Text.StringBuilder();
-    //     csvContent.AppendLine("uChange,vChange,xChange,yChange");
-    //     for (int i = 0; i < uvChanges.Count; i++)
-    //     {
-    //         var line = string.Format("{0},{1},{2},{3}",
-    //             uvChanges[i].x,
-    //             uvChanges[i].y,
-    //             xyChanges[i].x,
-    //             xyChanges[i].y);
-    //         csvContent.AppendLine(line);
-    //     }
-    //     File.WriteAllText(filePath, csvContent.ToString());
-    // }
 }
