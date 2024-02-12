@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System.Threading.Tasks;
+using Stopwatch = System.Diagnostics.Stopwatch;
+
 
 public class MeshMaker : MonoBehaviour
 {
@@ -45,6 +47,9 @@ public class MeshMaker : MonoBehaviour
 
     public Mesh BuildWormholeSphereMesh()
     {
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+
         var ico = new Icosahedron(sphereSizeFactor);
         List<Task<MeshData[]>> tasks = new List<Task<MeshData[]>>();
         float wormholeTriangleVertexRadius = ico.SideLength / Mathf.Sqrt(3);
@@ -83,6 +88,10 @@ public class MeshMaker : MonoBehaviour
         Task.WaitAll(tasks.ToArray());
         List<MeshData> meshDataList = tasks.SelectMany(task => task.Result).ToList();
         var mesh = MeshData.CreateMesh(meshDataList);
+
+        stopwatch.Stop();
+        Debug.Log("Time taken to build wormhole sphere: " + stopwatch.ElapsedMilliseconds + " milliseconds");
+
         return mesh;
     }
 
