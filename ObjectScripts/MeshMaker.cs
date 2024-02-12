@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.Threading.Tasks;
 
 public class MeshMaker : MonoBehaviour
 {
@@ -45,7 +46,8 @@ public class MeshMaker : MonoBehaviour
     public Mesh BuildWormholeSphereMesh()
     {
         var ico = new Icosahedron(sphereSizeFactor);
-        List<WormholeTriangle> ts = new();
+        List<Task<WormholeTriangle>> tasks = new List<Task<WormholeTriangle>>();
+
         for (int i = 0; i < Icosahedron.icoTriangleIdxs.Length; i++)
         {
             var triVertIdxs = Icosahedron.icoTriangleIdxs[i];
@@ -59,16 +61,25 @@ public class MeshMaker : MonoBehaviour
             var baseCylinderRadius = sphereSizeFactor / 100;
             var polyNumSides = halfNumSides * 2;
 
-            var wt = new WormholeTriangle(ico.SideLength, triVerts, polyNumSides, baseCylinderLength, baseCylinderRadius, splayLength);
-            wt.BuildMeshData();
-            ts.Add(wt);
+            int index = i; // Create a local copy of 'i'
+            tasks.Add(Task.Run(() =>
+            {
+                Debug.Log("Building triangle " + index);
+                var wt = new WormholeTriangle(ico.SideLength, triVerts, polyNumSides, baseCylinderLength, baseCylinderRadius, splayLength);
+                wt.BuildMeshData();
+                Debug.Log("Done building triangle " + index);
+                return wt;
+            }));
         }
 
-        IEnumerable<MeshData> meshDataList = ts
-            .SelectMany(wt => wt.GetMeshes());
+        Task.WaitAll(tasks.ToArray());
+        List<WormholeTriangle> ts = tasks.Select(task => task.Result).ToList();
+
+        IEnumerable<MeshData> meshDataList = ts.SelectMany(wt => wt.GetMeshes());
         var mesh = MeshData.CreateMesh(meshDataList);
         return mesh;
     }
+
 
     private static Texture2D GetTexture()
     {
