@@ -17,6 +17,8 @@ public class Polygon
 
     public Vector3[] GetVertices(float vertexRadius)
     {
+        // scale the vertices for the unit polygon (with vertices 1 unit away from the origin) 
+        // to the specified "vertexRadius".
         return vertices.Select(v => v * vertexRadius).ToArray();
     }
 

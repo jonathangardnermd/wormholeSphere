@@ -28,7 +28,7 @@ public class PolygonCylinder
 
     /*
     This function will create the sides of the cylinder by "stacking" two polygons: 
-    one at z=-length and the other at z=0.
+    one at z=-length and the other at z=zEnd.
     */
     private void AddPolygonCylinderToMesh(MeshData meshData)
     {

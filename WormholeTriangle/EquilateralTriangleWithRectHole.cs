@@ -17,12 +17,14 @@ public class EquilateralTriangleWithRectHole
         this.halfRectHeight = rectHeight / 2f;
         this.halfRectWidth = rectWidth / 2f;
 
+        // calc the vertices for the outer equilateral triangle
         var polygon = new Polygon(3);
         triangleVertices = polygon.GetVertices(vertexRadius);
     }
 
     public void BuildMeshData()
     {
+        // this fxn divides an equilateral triangle up into 7 triangles with a rectangular hole in the middle (of a certain height and width)
         var deltaX1 = vertexRadius - halfRectWidth; // change in x from the (r,0) triangle vertex to the right side of rect hole
         var deltaX2 = vertexRadius + halfRectWidth; // ... to the LEFT side of rect hole
         var deltaY1 = slope * deltaX1; // change in y from (r,0) to the right side of the rect hole

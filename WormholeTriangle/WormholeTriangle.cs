@@ -41,6 +41,9 @@ public class WormholeTriangle
 
     public static TriangleTransformer CalcTransform(float triangleVertexRadius, Vector3[] triangleVerts)
     {
+        // calculate the rotation and translation to transform the triangle 
+        // from the origin-centered equilateralTriangle returned by Polygon(3) 
+        // to the triangleVerts passed in
         var equilateralTriangle = new Polygon(3);
         var startVertices3D = equilateralTriangle.GetVertices(triangleVertexRadius);
         return new TriangleTransformer(startVertices3D, triangleVerts);

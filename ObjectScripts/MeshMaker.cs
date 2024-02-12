@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System.Threading.Tasks;
-using Stopwatch = System.Diagnostics.Stopwatch;
-
 
 public class MeshMaker : MonoBehaviour
 {
@@ -47,10 +45,15 @@ public class MeshMaker : MonoBehaviour
 
     public Mesh BuildWormholeSphereMesh()
     {
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
+        // replaces the triangles in an icosahedron with "WormholeTriangles" 
+        // that contain a womrhole-like structure in the middle of each triangle
 
+        // create an icosahedron
         var ico = new Icosahedron(sphereSizeFactor);
+
+        // Build a single wormhole triangle centered at the origin and unrotated.
+        // For each triangle of the icosahedron, we will clone this wormhole triangle 
+        // and transform it (rotate and translate it) to its proper place on the icosahedron.
         List<Task<MeshData[]>> tasks = new List<Task<MeshData[]>>();
         float wormholeTriangleVertexRadius = ico.SideLength / Mathf.Sqrt(3);
         var polyNumSides = halfNumSides * 2;
@@ -62,6 +65,7 @@ public class MeshMaker : MonoBehaviour
 
         for (int i = 0; i < Icosahedron.icoTriangleIdxs.Length; i++)
         {
+            // get the vertices of each triangle in the icosahedron
             var triVertIdxs = Icosahedron.icoTriangleIdxs[i];
             Vector3[] triVerts = new Vector3[3];
             for (int j = 0; j < 3; j++)
@@ -69,14 +73,22 @@ public class MeshMaker : MonoBehaviour
                 triVerts[j] = ico.vertices[triVertIdxs[j]];
             }
 
-            int index = i; // Create a local copy of 'i'
+            int index = i; // Create a local copy of 'i' so the debug statements print the correct index (necessary due to multi-threading)
+
+            // clone and transform the original wormhole triangle 
+            // in a separate thread for each triangle in the icosahedron
             tasks.Add(Task.Run(() =>
             {
                 Debug.Log("Building triangle " + index);
+
+                // we need to clone the meshData for the separate objects that make up the wormhole triangle (cylinder, splay, polygonBoxBorder, and the rest of the triangle)
                 MeshData[] clonedMeshDatas = new MeshData[meshes.Length];
                 for (int j = 0; j < meshes.Length; j++)
                 {
+                    // calculate the transform to rotate and translate the wormhole triangle to its proper place on the icosahedron
                     var tt = WormholeTriangle.CalcTransform(wormholeTriangleVertexRadius, triVerts);
+
+                    // clone and transform
                     clonedMeshDatas[j] = MeshData.Clone(meshes[j]);
                     clonedMeshDatas[j].vertices = tt.TransformVectors(clonedMeshDatas[j].vertices).ToList();
                 }
@@ -85,16 +97,15 @@ public class MeshMaker : MonoBehaviour
             }));
         }
 
+        // wait for all the threads to complete
         Task.WaitAll(tasks.ToArray());
+
+        // combine the meshDatas from all the "wormhole triangles" into a single mesh
         List<MeshData> meshDataList = tasks.SelectMany(task => task.Result).ToList();
         var mesh = MeshData.CreateMesh(meshDataList);
 
-        stopwatch.Stop();
-        Debug.Log("Time taken to build wormhole sphere: " + stopwatch.ElapsedMilliseconds + " milliseconds");
-
         return mesh;
     }
-
 
     private static Texture2D GetTexture()
     {

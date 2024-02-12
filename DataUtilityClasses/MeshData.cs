@@ -15,6 +15,7 @@ public class MeshData
 
     public static MeshData Clone(MeshData meshDataToClone)
     {
+        // make a deep copy of the mesh data
         MeshData meshData = new MeshData();
         foreach (var vertex in meshDataToClone.vertices)
         {
@@ -35,9 +36,16 @@ public class MeshData
         triangleIdxs.Add(i1);
         triangleIdxs.Add(i3);
     }
+    public void AddTriangleIdxs(int i1, int i2, int i3)
+    {
+        triangleIdxs.Add(i1);
+        triangleIdxs.Add(i2);
+        triangleIdxs.Add(i3);
+    }
 
     public static Mesh CreateMesh(IEnumerable<MeshData> meshDatas)
     {
+        // Create a single Unity mesh from a list of individual meshDatas for several different objects
         int totNumVs = meshDatas.Sum(meshData => meshData.vertices.Count);
         int totNumTidxs = meshDatas.Sum(meshData => meshData.triangleIdxs.Count);
 

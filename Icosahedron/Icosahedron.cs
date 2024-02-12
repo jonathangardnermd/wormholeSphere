@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Icosahedron
 {
-    public float SideLength;
+    private float sideLength;
 
     public static int[][] icoTriangleIdxs = new int[][]
                 {
@@ -47,22 +47,26 @@ public class Icosahedron
         new Vector3(-t, 0, 1).normalized
     };
 
+    public float SideLength { get => sideLength; set => sideLength = value; }
+
     public Icosahedron(float sizeFactor)
     {
         Init(sizeFactor);
     }
 
-    public void Init(float sizeFactor)
+    private void Init(float sizeFactor)
     {
+        // scale all the vertices by the sizeFactor
         for (int i = 0; i < vertices.Count; i++)
         {
             vertices[i] *= sizeFactor;
         }
+
+        // Take the first triangle and calculate the side length of the first edge.
+        // This side length should be the same for all edges in the symmetric icosahedron
         var tIdxs = icoTriangleIdxs[0];
         var v1 = vertices[tIdxs[0]];
         var v2 = vertices[tIdxs[1]];
-        SideLength = Vector3.Distance(v1, v2);
+        sideLength = Vector3.Distance(v1, v2);
     }
-
-
 }

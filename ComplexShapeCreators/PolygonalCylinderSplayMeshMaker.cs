@@ -1,4 +1,3 @@
-
 public class PolygonalCylinderSplay
 {
     private Polygon polygon;
@@ -10,44 +9,40 @@ public class PolygonalCylinderSplay
     public PolygonalCylinderSplay(Polygon polygon, float baseVertexRadius, SplayData splayData, float zEnd)
     {
         meshData = new();
-        this.polygon = polygon; // the data 
-        this.splayData = splayData; // the pts that define the curve that begins parallel to the cylinder's sides and ends parallel to the plane
-        this.baseVertexRadius = baseVertexRadius; // the radius of the cylinder before any splaying
+        this.polygon = polygon; // The cylinder has a polygonal cross-section, so the splay does as well
+        this.splayData = splayData; // The points that define the curve that begins parallel to the plane and ends parallel to the cylinder's sides
+        this.baseVertexRadius = baseVertexRadius; // The radius of the cylinder before any splaying
         this.zEnd = zEnd;
     }
 
     /* 
-    This function will form the splay at the end of the cylinder, starting at z=0 and splaying into z>0.
-    The splay will be formed by stacking polygons of increasing radii as z grows larger, and the 
-    specific radii and z coords chosen will come from the "splayData", which calculates the radii
-    and z coords so that the splay is parabolic.
+    This function will form the splay at the end of the cylinder, starting at z=zEnd and splaying into z<zEnd.
+    The splay will be formed by stacking polygons of increasing radii as z decreases,
+    with specific radii and z coordinates calculated from "splayData" to ensure a parabolic splay.
     */
     public void BuildMeshData()
     {
-        var prevVertexRadius = baseVertexRadius; // initialize the radius of the "previous" polygon to be the radius of the cylinder.
-        var prevZ = zEnd; // the original cylinder goes from z=-length to z=0, so the splay will start at z=0 and splay into z>0
+        var prevVertexRadius = baseVertexRadius; // Initialize the radius of the "previous" polygon to be the radius of the cylinder.
+        var prevZ = zEnd; // The original cylinder goes from z=zEnd+length to z=zEnd, so the splay will start at z=zEnd and splay into z<zEnd
 
-        float nextVertexRadius = -1f; // nextVertexRadius will generally be larger than prevVertexRadius as we stack larger and larger polygons at higher z-coords in the splay
-        var totSplayLength = splayData.GetTotalChangeInY(); // the splay length in the z direction
+        var totSplayLength = splayData.GetTotalChangeInY(); // The splay length in the z direction
         for (int splayLevel = 1; splayLevel <= this.splayData.numDivisions; splayLevel++)
         {
-            var splayPt = splayData.xyChanges[splayLevel]; // get the amount of change in x and y (actually, x and z here) at this splay pt in the curved splay
+            var splayPt = splayData.xyChanges[splayLevel]; // Get the amount of change in x and y (actually, x and z here) at this splay point in the curved splay
 
-            // the splay pts contain the total x and y changes from the end of cylinder to the end of the "splayLevel"
-            // therefore, the radius at the end of this splayLevel is equal to splayPt.x plus the radius at the end of the cylinder (baseVertexRadius)
-            nextVertexRadius = baseVertexRadius + splayPt.x;
+            // The splay points contain the total x and y changes from the end of the cylinder to the end of the "splayLevel".
+            // Therefore, the radius at the end of this splayLevel is equal to splayPt.x plus the radius at the end of the cylinder (baseVertexRadius)
+            float nextVertexRadius = baseVertexRadius + splayPt.x; // nextVertexRadius will generally be larger than prevVertexRadius as we stack larger and larger polygons at lower z-coordinates in the splay
 
-            // and the nextZ coord is splayPt.y plus the z coordinate at the end of the cylinder (which is 0)
+            // The next Z coordinate is the z coordinate at the end of the cylinder (which is zEnd) plus splayPt.y
             var nextZ = zEnd - splayPt.y;
 
-            // generate the vertices and triangles for the mesh between these two polygons of different radii and different z-coords
+            // Generate the vertices and triangles for the mesh between these two polygons of different radii and different z-coordinates
             PolygonCylinder.StackPolygons(meshData, polygon, totSplayLength, prevVertexRadius, nextVertexRadius, prevZ, nextZ);
 
-            // stack the next polygon upon the polygon just stacked
+            // Stack the next polygon upon the polygon just stacked
             prevVertexRadius = nextVertexRadius;
             prevZ = nextZ;
         }
     }
 }
-
-
