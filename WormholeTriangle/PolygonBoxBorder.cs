@@ -8,10 +8,10 @@ using UnityEngine;
 
 public class PolygonBounds
 {
-    public float minX;
-    public float minY;
-    public float maxX;
-    public float maxY;
+    public readonly float minX;
+    public readonly float minY;
+    public readonly float maxX;
+    public readonly float maxY;
 
     public PolygonBounds(float minX, float minY, float maxX, float maxY)
     {
@@ -23,11 +23,11 @@ public class PolygonBounds
 
     public float GetWidth()
     {
-        return this.maxX - this.minX;
+        return maxX - minX;
     }
     public float GetHeight()
     {
-        return this.maxY - this.minY;
+        return maxY - minY;
     }
 }
 public class PolygonBoxBorder
@@ -61,7 +61,7 @@ public class PolygonBoxBorder
         return new PolygonBounds(minX, minY, maxX, maxY);
     }
 
-    private static Vector2[] GetBoundingSquare(PolygonBounds polyBounds)
+    private static Vector2[] GetBoundingRect(PolygonBounds polyBounds)
     {
         var boundingSquareVertices = new Vector2[4];
         boundingSquareVertices[0] = new Vector2(polyBounds.maxX, polyBounds.maxY);
@@ -74,7 +74,7 @@ public class PolygonBoxBorder
 
     public void BuildMeshData()
     {
-        var boundingVerts = GetBoundingSquare(polygonBounds);
+        var boundingVerts = GetBoundingRect(polygonBounds);
 
         var numSides = polygonVertices.Length;
         float quadIdxSize = numSides / 4f;

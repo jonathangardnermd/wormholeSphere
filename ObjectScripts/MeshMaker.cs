@@ -8,7 +8,6 @@ public class MeshMaker : MonoBehaviour
 {
     public bool autoUpdate = false;
 
-
     [Range(2, 11)]
     public int halfNumSides = 3; // the numSides in the polygon (e.g. 6 means the cross-section is hexagonal)
 
@@ -28,14 +27,15 @@ public class MeshMaker : MonoBehaviour
         MeshDrawer drawer = FindObjectOfType<MeshDrawer>();
         var texture = GetTexture();
         drawer.DrawMesh(mesh, texture);
-        Debug.Log("cleared");
     }
+
     public void ClearMesh()
     {
         Mesh emptyMesh = new();
         DrawMesh(emptyMesh);
         Debug.Log("cleared");
     }
+
     public void MakeWormholeSphereMesh()
     {
         var mesh = BuildWormholeSphereMesh();

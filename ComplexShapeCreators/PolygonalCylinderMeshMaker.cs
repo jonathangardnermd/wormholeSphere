@@ -48,9 +48,9 @@ public class PolygonCylinder
         {
             // add the vertices and triangles that form the quad between poly1's i1 and i2 vertices and poly2's i1 and i2 vertices
             int i2 = (i1 + 1) % polygon.numSides;
-
             var startIdx = meshData.vertices.Count;
             List<int> vIdxs = new();
+
             // add the first triangle of the quad
             meshData.AddVertex(new Vector3(poly1Vs[i2].x, poly1Vs[i2].y, z1));
             meshData.AddVertex(new Vector3(poly1Vs[i1].x, poly1Vs[i1].y, z1));

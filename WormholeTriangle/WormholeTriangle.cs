@@ -1,5 +1,5 @@
 // using System.Collections.Generic;
-using System.Linq;
+// using System.Linq;
 using UnityEngine;
 
 public class WormholeTriangle
@@ -15,11 +15,8 @@ public class WormholeTriangle
     public WormholeTriangle(float triangleVertexRadius, int polyNumSides, float baseCylinderLength, float baseCylinderRadius, float splayLength)
     {
         Init(triangleVertexRadius, polyNumSides, baseCylinderLength, baseCylinderRadius, splayLength);
-        // BuildMeshData();
-        // CalcTransform(triangleVertexRadius, triangleVerts);
     }
-    private void Init(float triangleVertexRadius
-    , int polyNumSides, float baseCylinderLength, float baseCylinderRadius, float splayLength)
+    private void Init(float triangleVertexRadius, int polyNumSides, float baseCylinderLength, float baseCylinderRadius, float splayLength)
     {
         // calc polygonal hole where the wormhole will go
         float polyVertexRadius = baseCylinderRadius + splayLength;
@@ -53,13 +50,8 @@ public class WormholeTriangle
     {
         pb.BuildMeshData();
         triangle.BuildMeshData();
-        // pb.meshData.vertices = tt.TransformVectors(pb.meshData.vertices).ToList();
-        // triangle.meshData.vertices = tt.TransformVectors(triangle.meshData.vertices).ToList();
-
         cylinder.BuildMeshData();
         splay.BuildMeshData();
-        // cylinder.meshData.vertices = tt.TransformVectors(cylinder.meshData.vertices).ToList();
-        // splay.meshData.vertices = tt.TransformVectors(splay.meshData.vertices).ToList();
     }
 
     public MeshData[] GetMeshes()

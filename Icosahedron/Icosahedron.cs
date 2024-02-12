@@ -1,7 +1,5 @@
-// using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-// using System.Linq;
 
 public class Icosahedron
 {
@@ -60,7 +58,6 @@ public class Icosahedron
         {
             vertices[i] *= sizeFactor;
         }
-        // set side length
         var tIdxs = icoTriangleIdxs[0];
         var v1 = vertices[tIdxs[0]];
         var v2 = vertices[tIdxs[1]];

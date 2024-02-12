@@ -1,8 +1,5 @@
 
-// using System.Collections.Generic;
 using UnityEngine;
-// using System.Linq;
-// using Math;
 
 public class EquilateralTriangleWithRectHole
 {
@@ -31,7 +28,6 @@ public class EquilateralTriangleWithRectHole
         var deltaY1 = slope * deltaX1; // change in y from (r,0) to the right side of the rect hole
         var deltaY2 = slope * deltaX2; // ... to the LEFT side of the rect hole
 
-        // List<int> newIdxs = new();
         meshData.AddVertex(triangleVertices[0]); // 0
         meshData.AddVertex(triangleVertices[1]); // 1
         meshData.AddVertex(triangleVertices[2]);// 2
