@@ -9,49 +9,57 @@ public class WormholeTriangle
     public EquilateralTriangleWithRectHole triangle;
     public PolygonCylinder cylinder;
     public PolygonalCylinderSplay splay;
-    public static float sqrt3 = Mathf.Sqrt(3);
+    // public static float sqrt3 = Mathf.Sqrt(3);
     public static float sqrt2 = Mathf.Sqrt(2);
 
-    public WormholeTriangle(float sideLength, Vector3[] triangleVerts, int polyNumSides, float baseCylinderLength, float baseCylinderRadius, float splayLength)
+    public WormholeTriangle(float triangleVertexRadius, int polyNumSides, float baseCylinderLength, float baseCylinderRadius, float splayLength)
     {
-        Init(sideLength, triangleVerts, polyNumSides, baseCylinderLength, baseCylinderRadius, splayLength);
+        Init(triangleVertexRadius, polyNumSides, baseCylinderLength, baseCylinderRadius, splayLength);
+        // BuildMeshData();
+        // CalcTransform(triangleVertexRadius, triangleVerts);
     }
-    private void Init(float sideLength
-    , Vector3[] triangleVerts, int polyNumSides, float baseCylinderLength, float baseCylinderRadius, float splayLength)
+    private void Init(float triangleVertexRadius
+    , int polyNumSides, float baseCylinderLength, float baseCylinderRadius, float splayLength)
     {
-        // create the big equilateral triangle
-        float vertexRadius = sideLength / sqrt3; // applies to an equilateral triangle
-        var equilateralTriangle = new Polygon(3);
-        var startVertices3D = equilateralTriangle.GetVertices(vertexRadius);
-
-        tt = new TriangleTransformer(startVertices3D, triangleVerts);
-
+        // calc polygonal hole where the wormhole will go
         float polyVertexRadius = baseCylinderRadius + splayLength;
         var poly = new Polygon(polyNumSides);
+
+        // calc vertices/triangles for polygon box border around the polygonal hole
         pb = new PolygonBoxBorder(poly.GetVertices(polyVertexRadius));
         var b = pb.polygonBounds;
 
-        triangle = new EquilateralTriangleWithRectHole(vertexRadius,
+        // calc vertices/triangles for triangle with rect hole that fits the polygon box border 
+        triangle = new EquilateralTriangleWithRectHole(triangleVertexRadius,
             b.GetHeight(), b.GetWidth());
 
+        // calc vertices/triangles for cylindrical piece of the wormhole
         var zEnd = splayLength;
         cylinder = new PolygonCylinder(polyNumSides, baseCylinderLength, baseCylinderRadius, zEnd);
+
+        // calc vertices/triangles for wormhole splay
         var splayData = new SplayData(polyNumSides, splayLength * sqrt2);
         splay = new PolygonalCylinderSplay(poly, baseCylinderRadius, splayData, zEnd);
+    }
 
+    public static TriangleTransformer CalcTransform(float triangleVertexRadius, Vector3[] triangleVerts)
+    {
+        var equilateralTriangle = new Polygon(3);
+        var startVertices3D = equilateralTriangle.GetVertices(triangleVertexRadius);
+        return new TriangleTransformer(startVertices3D, triangleVerts);
     }
 
     public void BuildMeshData()
     {
         pb.BuildMeshData();
         triangle.BuildMeshData();
-        pb.meshData.vertices = tt.TransformVectors(pb.meshData.vertices).ToList();
-        triangle.meshData.vertices = tt.TransformVectors(triangle.meshData.vertices).ToList();
+        // pb.meshData.vertices = tt.TransformVectors(pb.meshData.vertices).ToList();
+        // triangle.meshData.vertices = tt.TransformVectors(triangle.meshData.vertices).ToList();
 
         cylinder.BuildMeshData();
         splay.BuildMeshData();
-        cylinder.meshData.vertices = tt.TransformVectors(cylinder.meshData.vertices).ToList();
-        splay.meshData.vertices = tt.TransformVectors(splay.meshData.vertices).ToList();
+        // cylinder.meshData.vertices = tt.TransformVectors(cylinder.meshData.vertices).ToList();
+        // splay.meshData.vertices = tt.TransformVectors(splay.meshData.vertices).ToList();
     }
 
     public MeshData[] GetMeshes()

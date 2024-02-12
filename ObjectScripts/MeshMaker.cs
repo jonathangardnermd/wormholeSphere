@@ -46,7 +46,14 @@ public class MeshMaker : MonoBehaviour
     public Mesh BuildWormholeSphereMesh()
     {
         var ico = new Icosahedron(sphereSizeFactor);
-        List<Task<WormholeTriangle>> tasks = new List<Task<WormholeTriangle>>();
+        List<Task<MeshData[]>> tasks = new List<Task<MeshData[]>>();
+        float wormholeTriangleVertexRadius = ico.SideLength / Mathf.Sqrt(3);
+        var polyNumSides = halfNumSides * 2;
+        var splayLength = sphereSizeFactor / 10;
+        var baseCylinderRadius = sphereSizeFactor / 100;
+        var wt = new WormholeTriangle(wormholeTriangleVertexRadius, polyNumSides, baseCylinderLength, baseCylinderRadius, splayLength);
+        wt.BuildMeshData();
+        var meshes = wt.GetMeshes();
 
         for (int i = 0; i < Icosahedron.icoTriangleIdxs.Length; i++)
         {
@@ -57,25 +64,24 @@ public class MeshMaker : MonoBehaviour
                 triVerts[j] = ico.vertices[triVertIdxs[j]];
             }
 
-            var splayLength = sphereSizeFactor / 10;
-            var baseCylinderRadius = sphereSizeFactor / 100;
-            var polyNumSides = halfNumSides * 2;
-
             int index = i; // Create a local copy of 'i'
             tasks.Add(Task.Run(() =>
             {
                 Debug.Log("Building triangle " + index);
-                var wt = new WormholeTriangle(ico.SideLength, triVerts, polyNumSides, baseCylinderLength, baseCylinderRadius, splayLength);
-                wt.BuildMeshData();
+                MeshData[] clonedMeshDatas = new MeshData[meshes.Length];
+                for (int j = 0; j < meshes.Length; j++)
+                {
+                    var tt = WormholeTriangle.CalcTransform(wormholeTriangleVertexRadius, triVerts);
+                    clonedMeshDatas[j] = MeshData.Clone(meshes[j]);
+                    clonedMeshDatas[j].vertices = tt.TransformVectors(clonedMeshDatas[j].vertices).ToList();
+                }
                 Debug.Log("Done building triangle " + index);
-                return wt;
+                return clonedMeshDatas;
             }));
         }
 
         Task.WaitAll(tasks.ToArray());
-        List<WormholeTriangle> ts = tasks.Select(task => task.Result).ToList();
-
-        IEnumerable<MeshData> meshDataList = ts.SelectMany(wt => wt.GetMeshes());
+        List<MeshData> meshDataList = tasks.SelectMany(task => task.Result).ToList();
         var mesh = MeshData.CreateMesh(meshDataList);
         return mesh;
     }

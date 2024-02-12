@@ -14,6 +14,17 @@ public class MeshData
         triangleIdxs = new();
     }
 
+    public static MeshData Clone(MeshData meshDataToClone)
+    {
+        MeshData meshData = new MeshData();
+        foreach (var vertex in meshDataToClone.vertices)
+        {
+            meshData.vertices.Add(new Vector3(vertex.x, vertex.y, vertex.z));
+        }
+        meshData.triangleIdxs = new List<int>(meshDataToClone.triangleIdxs);
+        return meshData;
+    }
+
     public void AddVertex(Vector3 v)
     {
         vertices.Add(v);
