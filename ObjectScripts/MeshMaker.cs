@@ -46,13 +46,14 @@ public class MeshMaker : MonoBehaviour
 
     public Mesh BuildWormholeSphereMesh()
     {
-        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        Stopwatch stopwatch = new();
         stopwatch.Start();
 
         var ico = new Icosahedron(sphereSizeFactor);
         List<WormholeTriangle> ts = new();
         for (int i = 0; i < Icosahedron.icoTriangleIdxs.Length; i++)
         {
+            Debug.Log("Begin building triangle " + i);
             var triVertIdxs = Icosahedron.icoTriangleIdxs[i];
             Vector3[] triVerts = new Vector3[3];
             for (int j = 0; j < 3; j++)
@@ -67,6 +68,7 @@ public class MeshMaker : MonoBehaviour
             var wt = new WormholeTriangle(ico.SideLength, triVerts, polyNumSides, baseCylinderLength, baseCylinderRadius, splayLength);
             wt.BuildMeshData();
             ts.Add(wt);
+            Debug.Log("Done building triangle " + i);
         }
 
         IEnumerable<MeshData> meshDataList = ts
@@ -74,7 +76,7 @@ public class MeshMaker : MonoBehaviour
         var mesh = MeshData.CreateMesh(meshDataList);
 
         stopwatch.Stop();
-        UnityEngine.Debug.Log("Time taken to build wormhole sphere: " + stopwatch.ElapsedMilliseconds + " milliseconds");
+        Debug.Log("Time taken to build wormhole sphere: " + stopwatch.ElapsedMilliseconds + " milliseconds");
         return mesh;
     }
 
