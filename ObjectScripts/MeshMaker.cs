@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 public class MeshMaker : MonoBehaviour
 {
-    public bool autoUpdate = false;
+    // public bool autoUpdate = false;
 
     [Range(2, 11)]
     public int halfNumSides = 3; // the numSides in the polygon (e.g. 6 means the cross-section is hexagonal)
@@ -17,11 +17,28 @@ public class MeshMaker : MonoBehaviour
     [Range(10, 500)]
     public float baseCylinderLength = 10;
 
-    public void MakeMesh()
+    public void MakeMesh(string which)
     {
+        if (which == "sphere")
+        {
+            MakeWormholeSphereMesh();
+        }
+        else if (which == "border")
+        {
+            MakePolygonBorderBox();
+        }
+        else if (which == "ico")
+        {
+            MakeIcosahedron();
+        }
+        else if (which == "tri")
+        {
+            MakeWormholeTriangle();
+        }
         // MakeWormholeSphereMesh();
         // MakePolygonBorderBox();
-        MakeWormholeTriangle();
+        // MakeWormholeTriangle();
+        // MakeIcosahedron();
     }
 
     public void DrawMesh(Mesh mesh)
@@ -49,16 +66,27 @@ public class MeshMaker : MonoBehaviour
     {
         // calc vertices/triangles for polygon box border around the polygonal hole
         var poly = new Polygon(halfNumSides * 2);
-        var pb = new PolygonBoxBorder(poly.GetVertices(10));
+        var pb = new PolygonBoxBorder(poly.GetVertices(20));
         pb.BuildMeshData();
         var mesh = MeshData.CreateMesh(new[] { pb.meshData });
+        DrawMesh(mesh);
+        // var b = pb.polygonBounds;
+    }
+
+    public void MakeIcosahedron()
+    {
+        // calc vertices/triangles for polygon box border around the polygonal hole
+        var ico = new Icosahedron(30);
+        ico.BuildMeshData();
+        var meshes = new List<MeshData> { ico.meshData };
+        var mesh = MeshData.CreateMesh(meshes);
         DrawMesh(mesh);
         // var b = pb.polygonBounds;
     }
     public void MakeWormholeTriangle()
     {
         // calc vertices/triangles for polygon box border around the polygonal hole
-        var wt = new WormholeTriangle(40, 6, 10, 1, 10);
+        var wt = new WormholeTriangle(40, halfNumSides * 2, 10, 1, 10);
         wt.BuildMeshData();
         var meshes = wt.GetMeshes();
         var mesh = MeshData.CreateMesh(meshes);

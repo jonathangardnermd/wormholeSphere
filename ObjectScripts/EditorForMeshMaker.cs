@@ -10,15 +10,23 @@ public class EditorForMeshMaker : Editor
 
         if (DrawDefaultInspector())
         {
-            if (maker.autoUpdate)
-            {
-                maker.MakeMesh();
-            }
+            // if (maker.autoUpdate)
+            // {
+            //     maker.MakeMesh("");
+            // }
         }
 
-        if (GUILayout.Button("Generate Mesh"))
+        if (GUILayout.Button("Generate Icosahedron"))
         {
-            maker.MakeMesh();
+            maker.MakeMesh("ico");
+        }
+        if (GUILayout.Button("Generate WormholeTriangle"))
+        {
+            maker.MakeMesh("tri");
+        }
+        if (GUILayout.Button("Generate PolyBoxBorder"))
+        {
+            maker.MakeMesh("border");
         }
         if (GUILayout.Button("Clear Mesh"))
         {

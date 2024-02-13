@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Icosahedron
 {
     private float sideLength;
+    public MeshData meshData;
 
     public static int[][] icoTriangleIdxs = new int[][]
                 {
@@ -52,6 +54,7 @@ public class Icosahedron
     public Icosahedron(float sizeFactor)
     {
         Init(sizeFactor);
+        meshData = new();
     }
 
     private void Init(float sizeFactor)
@@ -68,5 +71,24 @@ public class Icosahedron
         var v1 = vertices[tIdxs[0]];
         var v2 = vertices[tIdxs[1]];
         sideLength = Vector3.Distance(v1, v2);
+    }
+
+    public void BuildMeshData()
+    {
+        for (int i = 0; i < icoTriangleIdxs.Length; i++)
+        {
+            var triVertIdxs = icoTriangleIdxs[i];
+            var v1 = vertices[triVertIdxs[0]];
+            var v2 = vertices[triVertIdxs[1]];
+            var v3 = vertices[triVertIdxs[2]];
+
+            meshData.AddVertex(new Vector3(v1.x, v1.y, v1.z));
+            meshData.AddVertex(new Vector3(v2.x, v2.y, v2.z));
+            meshData.AddVertex(new Vector3(v3.x, v3.y, v3.z));
+            meshData.AddTriangleIdxs(i * 3, i * 3 + 1, i * 3 + 2);
+            // meshData.AddVertex(vertices[i]);
+        }
+        // meshData.vertices = new List<Vector3>(vertices);
+        // meshData.triangleIdxs = icoTriangleIdxs.SelectMany(subArray => subArray).ToList();
     }
 }
