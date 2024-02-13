@@ -19,7 +19,8 @@ public class MeshMaker : MonoBehaviour
 
     public void MakeMesh()
     {
-        MakeWormholeSphereMesh();
+        // MakeWormholeSphereMesh();
+        MakePolygonBorderBox();
     }
 
     public void DrawMesh(Mesh mesh)
@@ -43,6 +44,16 @@ public class MeshMaker : MonoBehaviour
         Debug.Log("done");
     }
 
+    public void MakePolygonBorderBox()
+    {
+        // calc vertices/triangles for polygon box border around the polygonal hole
+        var poly = new Polygon(halfNumSides * 2);
+        var pb = new PolygonBoxBorder(poly.GetVertices(10));
+        pb.BuildMeshData();
+        var mesh = MeshData.CreateMesh(new[] { pb.meshData });
+        DrawMesh(mesh);
+        // var b = pb.polygonBounds;
+    }
     public Mesh BuildWormholeSphereMesh()
     {
         // replaces the triangles in an icosahedron with "WormholeTriangles" 
